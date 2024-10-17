@@ -1,0 +1,10 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* .dropdown-content {
+    display: none;
+}
+.dropdown:hover .dropdown-content {
+    display: block;
+} */
