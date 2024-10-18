@@ -6,10 +6,16 @@
         @csrf
 
         <!-- Email Address -->
-        <div>
+        {{-- <div>
             <x-input-label for="email" :value="__('Email')" />
             <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autofocus autocomplete="username" />
             <x-input-error :messages="$errors->get('email')" class="mt-2" />
+        </div> --}}
+
+        <div>
+            <x-input-label for="student_id" :value="__('Student ID')" />
+            <x-text-input id="student_id" class="block mt-1 w-full" type="text" name="student_id" :value="old('student_id')" required autofocus autocomplete="username" />
+            <x-input-error :messages="$errors->get('student_id')" class="mt-2" />
         </div>
 
         <!-- Password -->
