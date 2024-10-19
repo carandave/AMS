@@ -1,7 +1,7 @@
 <x-app-layout>
     <x-slot name="header">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            <!-- {{ __('Dashboard') }} -->
+            {{ __('Student Dashboard') }}
         </h2>
     </x-slot>
 
@@ -11,7 +11,7 @@
                 <div class="p-6 text-gray-900">
                   
                   
-                    <!-- {{ __("You're logged in! Mali itong dashboard") }} -->
+                    {{ __("You're logged in! Student") }}
 
                     
 
