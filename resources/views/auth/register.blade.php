@@ -1,9 +1,14 @@
 <x-guest-layout>
-    <form method="POST" action="{{ route('register') }}">
+
+    @if(session('success'))
+        <div class="alert alert-success mb-3">
+            {{ session('success') }}
+        </div>
+    @endif
+
+    <form method="POST" action="{{ route('register') }}" class="">
         @csrf
 
-       
-        
         <div class="grid grid-cols-2 gap-4">
              <!-- First Name -->
             <div>

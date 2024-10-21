@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Validation\ValidationException;
+use \App\Models\User;
 
 class LoginRequest extends FormRequest
 {
@@ -40,6 +41,14 @@ class LoginRequest extends FormRequest
     public function authenticate(): void
     {
         $this->ensureIsNotRateLimited();
+
+        $user = User::where('student_id', $this->student_id)->first();
+
+        if($user && $user->status === 'pending'){
+            throw ValidationException::withMessages([
+                'student_id' => 'Your account is pending approval. Please contact the administrator.',
+            ]);
+        }
 
         if (! Auth::attempt($this->only('student_id', 'password'), $this->boolean('remember'))) {
             RateLimiter::hit($this->throttleKey());

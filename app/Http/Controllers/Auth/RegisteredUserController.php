@@ -43,14 +43,23 @@ class RegisteredUserController extends Controller
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'student_id' => $request->student_id,
+            'role' => 'student',
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        // Auth::login($user);
 
-        return redirect(route('welcome', absolute: false));
+        // if(Auth::user()->role === 'admin'){
+        //     return redirect()->route('admin.dashboard');
+        // }
+
+        // else if(Auth::user()->role === 'student'){
+        //     return redirect()->route('student.dashboard');
+        // }
+
+        return redirect('/register')->with('success', 'Your account has been successfully registered. An administrator must approve your account before you can log in.');
     }
 }
