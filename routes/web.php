@@ -34,9 +34,13 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {
+    Route::get('student/profile', [ProfileController::class, 'edit'])->name('student.profile.edit');
+    Route::patch('student/profile', [ProfileController::class, 'update'])->name('student.profile.update');
+    Route::delete('student/profile', [ProfileController::class, 'destroy'])->name('student.profile.destroy');
+
     Route::get('student/dashboard', function(){
         return view('student.dashboard');
-    })->middleware(['auth', 'role:student'])->name('student.dashboard');
+    })->name('student.dashboard');
 });
 
 
