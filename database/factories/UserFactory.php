@@ -24,12 +24,23 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name' => fake()->name(),
+            'first_name' => fake()->firstName(),
+            'middle_name' => fake()->lastName(),
+            'last_name' => fake()->lastName(),
+            'student_id' => $this->generateStudentId(),
+            'role' => fake()->randomElement(['admin', 'student']),
+            'status' => 'pending',
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),
             'remember_token' => Str::random(10),
         ];
+    }
+
+    private function generateStudentId()
+    {
+        // Generate a random student ID (e.g., "B20200999")
+        return 'B2020' . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
     }
 
     /**

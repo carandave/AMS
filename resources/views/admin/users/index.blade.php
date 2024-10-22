@@ -12,32 +12,29 @@
                   
                     {{ __("User Page") }}
 
-                    <table class="table table-fixed">
-                        <thead>
-                          <tr>
-                            <th>Song</th>
-                            <th>Artist</th>
-                            <th>Year</th>
-                          </tr>
-                        </thead>
-                        <tbody>
-                          <tr>
-                            <td>The Sliding Mr. Bones (Next Stop, Pottersville)</td>
-                            <td>Malcolm Lockyer</td>
-                            <td>1961</td>
-                          </tr>
-                          <tr>
-                            <td>Witchy Woman</td>
-                            <td>The Eagles</td>
-                            <td>1972</td>
-                          </tr>
-                          <tr>
-                            <td>Shining Star</td>
-                            <td>Earth, Wind, and Fire</td>
-                            <td>1975</td>
-                          </tr>
-                        </tbody>
-                      </table>
+                    <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" aria-selected="true">Home</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" aria-selected="false">Profile</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                          <button class="nav-link" id="pills-contact-tab" data-bs-toggle="pill" data-bs-target="#pills-contact" type="button" aria-selected="false">Contact</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="pills-tabContent">
+                        <div class="tab-pane fade show active" id="pills-home">
+                            @livewire('user-list')
+                        </div>
+                        <div class="tab-pane fade" id="pills-profile">
+                            @livewire('user-list', ['showPending' => true])
+                        </div>
+                        <div class="tab-pane fade" id="pills-contact">2</div>
+                    </div>
+
+                    
                     
                 </div>
             </div>
