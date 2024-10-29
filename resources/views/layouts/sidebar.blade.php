@@ -33,7 +33,8 @@
             @auth
                 @if(Auth::user()->role === 'admin')
                 <x-side-nav-link link="{{ route('admin.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('admin/dashboard')">Dashboard</x-side-nav-link>
-                <x-side-nav-link link="{{ route('admin.users') }}" icon="bi bi-journal-text" :active="request()->is('admin/users')" >Users</x-side-nav-link>
+                <x-side-nav-link icon="bi bi-people-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/users/student', 'admin/users/student/request']">Users</x-side-nav-link>
+                <x-side-nav-link link="{{ route('admin.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('admin/dashboard')">Dashboard</x-side-nav-link>
                 @elseif(Auth::user()->role === 'student')
                 <x-side-nav-link link="{{ route('student.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('student/dashboard')">Dashboard</x-side-nav-link>
                 @endif

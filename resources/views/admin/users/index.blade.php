@@ -26,16 +26,14 @@
 
                     <div class="tab-content" id="pills-tabContent">
                         <div class="tab-pane fade show active" id="pills-home">
-                            @livewire('user-list')
+                            {{-- @livewire('user-list') --}}
                         </div>
                         <div class="tab-pane fade" id="pills-profile">
-                            @livewire('user-list', ['showPending' => true])
+                            {{-- @livewire('user-list', ['showPending' => true]) --}}
                         </div>
                         <div class="tab-pane fade" id="pills-contact">2</div>
                     </div>
 
-                    
-                    
                 </div>
             </div>
         </div>
