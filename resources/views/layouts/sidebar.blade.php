@@ -31,13 +31,13 @@
     <div class="px-2">
         <ul class="mt-5">
             @auth
-                @if(Auth::user()->role === 'admin')
+            @if(Auth::user()->role === 'admin')
                 <x-side-nav-link link="{{ route('admin.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('admin/dashboard')">Dashboard</x-side-nav-link>
-                <x-side-nav-link icon="bi bi-people-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/users/student', 'admin/users/student/request']">Users</x-side-nav-link>
-                <x-side-nav-link link="{{ route('admin.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('admin/dashboard')">Dashboard</x-side-nav-link>
-                @elseif(Auth::user()->role === 'student')
-                <x-side-nav-link link="{{ route('student.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('student/dashboard')">Dashboard</x-side-nav-link>
-                @endif
+                <x-side-nav-link icon="bi bi-people-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/users/student', 'admin/users/admin']">Users</x-side-nav-link>
+                <x-side-nav-link link="{{ route('admin.profile.edit') }}" icon="bi bi-person-fill" :active="request()->is('admin/profile/edit')">Profile</x-side-nav-link>
+            @elseif(Auth::user()->role === 'student')
+                <x-side-nav-link link="{{ route('student.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('student/dashboard')">Profile</x-side-nav-link>
+            @endif
             @endauth
             
         </ul>

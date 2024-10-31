@@ -1,25 +1,29 @@
 <div>
     {{-- In work, do what you enjoy. --}}
     <div class="row">
-      <div class="col-md-4">
-
+      <div class="col-md-4 flex items-center space-x-4">
+        <h4 class="text-lg">Status</h4>
+        <select name="" id="" wire:model.live="status">
+          <option value="approved">All Students</option>
+          <option value="pending">Pending</option>
+          <option value="denied">Denied</option>
+          <option value="archive">Archive</option>
+        </select>
       </div>
       <div class="col-md-4">
-
+        {{-- <h3>{{ $status }}</h3> --}}
       </div>
       <div class="col-md-4 flex flex-end">
         {{-- <input type="text" class="border border-gray-200 p-2 rounded w-96" placeholder="Search students" wire:model="search">
          --}}
          <input 
               type="text" 
-              wire:model.debounce.300ms="search" 
+              wire:model.live="search" 
               placeholder="Search Users..." 
-              class="border rounded p-2 mb-4"
+              class="border rounded p-2 mb-4 w-96"
           />
       </div>
     </div>
-    <div>Search Query: {{ $search }}</div>
-    
 
     <table class="table pt-6 mt-3">
         <thead class="">

@@ -32,13 +32,17 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         return view('admin.users.student.index');
     })->name('admin.users.student');
 
+    Route::get('admin/users/admin', function(){
+        return view('admin.users.admin.index');
+    })->name('admin.users.admin');
+
     // Route::get('admin/users/active', function(){
     //     return view('admin.users.active');
     // })->name('admin.users.active');
 
-    Route::get('admin/users/student/request', function(){
-        return view('admin.users.student.request_account');
-    })->name('admin.users.student.request');
+    // Route::get('admin/users/student/request', function(){
+    //     return view('admin.users.student.request_account');
+    // })->name('admin.users.student.request');
 });
 
 Route::middleware(['auth', 'role:student'])->group(function () {
