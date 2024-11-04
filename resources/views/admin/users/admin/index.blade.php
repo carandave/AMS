@@ -9,7 +9,7 @@
                    
                     <div class="row mt-3">
                         <div class="col-md-12">
-                            @livewire('user-list', ['showPending' => true])
+                            @livewire('user-list', ['showStudentList' => false])
                         </div>
                     </div>
                     

@@ -5,11 +5,11 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
                   
-                    <x-header-side-column>Student List</x-header-side-column>
+                    <x-header-side-column>Student List </x-header-side-column>
                    
                     <div class="row mt-3">
                         <div class="col-md-12">
-                            @livewire('user-list', ['showPending' => true])
+                            @livewire('user-list', ['showStudentList' => true])
                         </div>
                     </div>
                     

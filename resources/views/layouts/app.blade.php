@@ -46,7 +46,7 @@
             </div> --}}
 
             <div class="row mx-0 flex-grow-1">
-                <div class="col-md-2 bg-dark vh-100 overflow-auto" style="position: sticky; top: 0; z-index: 10011">
+                <div class="col-md-2 bg-dark vh-100 overflow-auto " style="position: sticky; top: 0; z-index: 10011">
                     @include('layouts.sidebar')
                 </div>
 
