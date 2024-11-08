@@ -65,4 +65,47 @@
         </tbody>
       </table>
       {{ $users->links() }}
+
+
+      <!-- Button trigger modal -->
+    {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      Launch static backdrop modal
+    </button> --}}
+
+    <!-- Modal -->
+    <div class="modal fade" id="create_official" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Create Official</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <x-modal-button data-bs-dismiss="modal" class="bg-gray-600 hover:bg-gray-800" >Close</x-modal-button>
+            <x-modal-button >Save</x-modal-button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="create_student" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="staticBackdropLabel">Create Student</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            ...
+          </div>
+          <div class="modal-footer">
+            <x-modal-button data-bs-dismiss="modal" class="bg-gray-600 hover:bg-gray-800" >Close</x-modal-button>
+            <x-modal-button >Save</x-modal-button>
+          </div>
+        </div>
+      </div>
+    </div>
 </div>

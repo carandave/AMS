@@ -8,7 +8,9 @@
                     <div class="flex justify-between">
                         <x-header-side-column>Student List </x-header-side-column>
 
-                        <x-modal-button >Create Student</x-modal-button>
+                        <x-modal-button data-bs-toggle="modal" data-bs-target="#create_student" data-bs-backdrop="false">Create Student</x-modal-button>
+                        <!-- Inside existing Livewire component -->
+                        
                     </div>
                     
                    
@@ -22,6 +24,8 @@
             </div>
         </div>
     </div>
+
+    
 
     
 </x-app-layout>

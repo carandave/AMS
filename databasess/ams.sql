@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Nov 04, 2024 at 09:24 AM
+-- Generation Time: Nov 08, 2024 at 09:19 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -149,7 +149,8 @@ CREATE TABLE `sessions` (
 --
 
 INSERT INTO `sessions` (`id`, `user_id`, `ip_address`, `user_agent`, `payload`, `last_activity`) VALUES
-('zpHeuy1Syrg4oCOw8tBBJFBXHMQzdjhZsF0Nn1I8', 7, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoiOWtjaXZ3dzZkTG9jdU9xQjI5MG5sVzZGQzB2NGpHTzBaMlNpaXlvQiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi91c2Vycy9zdHVkZW50Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Nzt9', 1730708485);
+('3hqZ11WeGAgGELrAqICrsCRHhfncLSsjoL3fShT3', 7, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36', 'YTo1OntzOjY6Il90b2tlbiI7czo0MDoicjRRU2VJNjlodXBaTXhJM2ZTa0pPVUJ1VndQeW5GUDF4QnlTY1pPbCI7czozOiJ1cmwiO2E6MTp7czo4OiJpbnRlbmRlZCI7czo0MToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2FkbWluL3VzZXJzL3N0dWRlbnQiO31zOjk6Il9wcmV2aW91cyI7YToxOntzOjM6InVybCI7czo0MToiaHR0cDovLzEyNy4wLjAuMTo4MDAwL2FkbWluL3VzZXJzL3N0dWRlbnQiO31zOjY6Il9mbGFzaCI7YToyOntzOjM6Im9sZCI7YTowOnt9czozOiJuZXciO2E6MDp7fX1zOjUwOiJsb2dpbl93ZWJfNTliYTM2YWRkYzJiMmY5NDAxNTgwZjAxNGM3ZjU4ZWE0ZTMwOTg5ZCI7aTo3O30=', 1731053445),
+('5GbhB83fnsvUpVvFdld8f3CfqPGr3Xo2S731ePoO', 7, '127.0.0.1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0', 'YTo0OntzOjY6Il90b2tlbiI7czo0MDoibkk1WW44dXR4MFlpVTNBVDA5Y1pId016Z2RmVXVTT3NzUnhlN25JaiI7czo5OiJfcHJldmlvdXMiO2E6MTp7czozOiJ1cmwiO3M6NDE6Imh0dHA6Ly8xMjcuMC4wLjE6ODAwMC9hZG1pbi91c2Vycy9zdHVkZW50Ijt9czo2OiJfZmxhc2giO2E6Mjp7czozOiJvbGQiO2E6MDp7fXM6MzoibmV3IjthOjA6e319czo1MDoibG9naW5fd2ViXzU5YmEzNmFkZGMyYjJmOTQwMTU4MGYwMTRjN2Y1OGVhNGUzMDk4OWQiO2k6Nzt9', 1731053824);
 
 -- --------------------------------------------------------
 
@@ -178,7 +179,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `first_name`, `middle_name`, `last_name`, `student_id`, `role`, `status`, `email`, `email_verified_at`, `password`, `remember_token`, `created_at`, `updated_at`) VALUES
-(7, 'John1', 'Orfanel1', 'Carandang1', 'B20200916', 'admin', 'approved', 'davecarandang9@gmail.com', NULL, '$2y$12$z8iRDctupDz5zovGc/Y5x.UhF.r96cU9c7qiP8tD4h.WV88UUqWC2', '9Apd6Shsbro0k9ipg6grVaD5basyynawDGRKnPgdnhchn3K2rcr7rlUhkiCW', '2024-10-20 21:43:02', '2024-10-20 23:50:00'),
+(7, 'John1', 'Orfanel1', 'Carandang1', 'B20200916', 'admin', 'approved', 'davecarandang9@gmail.com', NULL, '$2y$12$z8iRDctupDz5zovGc/Y5x.UhF.r96cU9c7qiP8tD4h.WV88UUqWC2', '4Fvhfr7XIzert2LdmSFWn9Mg9iQI4vTIwPClgXILbQwzwNfpXoz4MGoEU66u', '2024-10-20 21:43:02', '2024-10-20 23:50:00'),
 (8, 'John', 'John', 'Doe', 'B20200917', 'student', 'approved', 'johndoe@gmail.com', NULL, '$2y$12$HQSA7Uq2dHKvMvQuJ0hlsOQYy56.ISG8L8ZXk4jZKttiQACsrGCmq', NULL, '2024-10-20 23:08:30', '2024-10-20 23:08:30'),
 (9, 'Chadrick', 'Morissette', 'Padberg', 'B20202666', 'student', 'approved', 'lizeth.flatley@example.net', '2024-10-21 22:37:56', '$2y$12$eNMkpqtKT1Lp0Y41oxDWG.ukToXh2/ed/YUBOC4HVx.jc0XRJMfN.', 'qbecOICdUX', '2024-10-21 22:37:56', '2024-10-21 22:37:56'),
 (10, 'Amber', 'Volkman', 'Haley', 'B20204194', 'admin', 'approved', 'carroll33@example.com', '2024-10-21 22:37:56', '$2y$12$eNMkpqtKT1Lp0Y41oxDWG.ukToXh2/ed/YUBOC4HVx.jc0XRJMfN.', 'PuqO4fOvMC', '2024-10-21 22:37:57', '2024-10-21 22:37:57'),

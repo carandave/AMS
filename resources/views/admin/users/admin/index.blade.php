@@ -8,7 +8,8 @@
                     <div class="flex justify-between">
                         <x-header-side-column>Admin List </x-header-side-column>
 
-                        <x-modal-button >Create Official</x-modal-button>
+                        <x-modal-button data-bs-toggle="modal" data-bs-target="#create_official" data-bs-backdrop="false">Create Official</x-modal-button>
+
                     </div>
                    
                     <div class="row mt-3">

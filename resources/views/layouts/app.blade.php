@@ -46,7 +46,7 @@
             </div> --}}
 
             <div class="row mx-0 flex-grow-1">
-                <div class="col-md-2 bg-dark vh-100 overflow-auto " style="position: sticky; top: 0; z-index: 10011">
+                <div class="col-md-2 bg-dark vh-100 overflow-auto " style="position: sticky; top: 0; z-index: 1">
                     @include('layouts.sidebar')
                 </div>
 
@@ -65,6 +65,28 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
     
         @livewireScripts
+
+        <script>
+
+            document.addEventListener('show.bs.modal', function () {
+                // Remove all backdrops before opening a new modal
+                document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+            });
+
+            document.addEventListener('hidden.bs.modal', function (event) {
+                // Ensure all backdrops are removed when a modal is closed
+                document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+                
+                // Optional: fully dispose of the modal instance to reset it
+                const modal = event.target;
+                const bootstrapModal = bootstrap.Modal.getInstance(modal);
+                if (bootstrapModal) {
+                    bootstrapModal.dispose();
+                }
+            });
+
+        </script>
         
     </body>
+
 </html>
