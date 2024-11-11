@@ -7,6 +7,8 @@ use App\Models\User;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
+use Illuminate\Support\Str;
+
 class UserList extends Component
 {
 
@@ -16,9 +18,37 @@ class UserList extends Component
     public $status = 'approved';
     public $showStudentList = false; // To determine whether to show pending users
 
-    public function search()
+    public $first_name, $last_name, $middle_name, $student_id, $email, $image; 
+
+    protected function rules(){
+        return ['first_name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
+            'student_id' => 'required|unique:users,student_id',
+            'email' => 'required|unique:users,email'];
+    }
+
+    public function insert_student()
     {
-        // $this->resetPage();
+        
+        $validated = $this->validate();
+        
+        $password = Str::password(12);
+
+        $user = User::create([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' =>  $validated['last_name'],
+            'student_id' =>  $validated['student_id'],
+            'status' => 'approved',
+            'email' =>  $validated['email'],
+            'password' => bcrypt($password)
+        ]);
+
+        if($user){
+            return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
+        }
+
     }
 
     public function mount($showStudentList = false)
@@ -31,7 +61,7 @@ class UserList extends Component
 
         // if showStudentList is true it will go to this code 
         if($this->showStudentList){
-            $users = User::when($this->search, function($query){
+            $users = User::orderBy('created_at', 'desc')->when($this->search, function($query){
                 return $query->where(function($query){
                     $query->where('first_name', 'like', '%' . $this->search . '%')
                     ->orWhere('middle_name', 'like', '%' . $this->search . '%')
@@ -51,7 +81,7 @@ class UserList extends Component
 
         // if showStudentList is false it will go to this code 
         else if(!$this->showStudentList){
-            $users = User::when($this->search, function($query){
+            $users = User::orderBy('created_at', 'desc')->when($this->search, function($query){
                 return $query->where(function($query){
                     $query->where('first_name', 'like', '%' . $this->search . '%')
                     ->orWhere('middle_name', 'like', '%' . $this->search . '%')

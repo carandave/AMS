@@ -21,11 +21,20 @@
          <input 
               type="text" 
               wire:model.live="search" 
-              placeholder="Search Users..." 
+              @if($showStudentList)
+              placeholder="Search Students" 
+              @endif
+              placeholder="Search Officials" 
               class="border rounded p-2 w-96 text-sm focus:border-orange-600 focus:ring-orange-500 "
           />
       </div>
     </div>
+
+    @if(session('success_student'))
+      <div class="p-3 bg-green-100 mt-3 w-full rounded">
+        <p class="text-gray-600"> {{ session('success_student') }}</p>
+      </div>
+    @endif
 
     <table class="table table-hover pt-6 mt-3 " >
         <thead class="" >
@@ -84,14 +93,14 @@
             ...
           </div>
           <div class="modal-footer">
-            <x-modal-button data-bs-dismiss="modal" class="bg-gray-600 hover:bg-gray-800" >Close</x-modal-button>
+            <x-modal-button data-bs-dismiss="modal" class="bg-gray-400 hover:bg-gray-900" >Close</x-modal-button>
             <x-modal-button >Save</x-modal-button>
           </div>
         </div>
       </div>
     </div>
 
-    <div class="modal fade" id="create_student" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="create_student" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -99,12 +108,61 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
+            <form wire:submit.prevent="insert_student">
+              <div class="row">
+                <div class="col-md-6">
+                    <label for="first_name">First Name <span class="text-rose-700">*</span></label>
+                    <x-text-input id="first_name" class="block mt-1 w-full p-2 text-sm" type="text" wire:model="first_name" :value="old('first_name')" required autofocus autocomplete="first_name" />
+                    <x-input-error :messages="$errors->get('first_name')" class="mt-2" /> 
+                </div>
+
+                <div class="col-md-6">
+                  <label for="middle_name">Middle Name <span class="text-rose-700">*</span></label>
+                  <x-text-input id="middle_name" class="block mt-1 w-full p-2 text-sm" type="text" wire:model="middle_name" :value="old('middle_name')" required autofocus autocomplete="middle_name" />
+                  <x-input-error :messages="$errors->get('middle_name')" class="mt-2" /> 
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-6">
+                    <label for="last_name">Last Name <span class="text-rose-700">*</span></label>
+                    <x-text-input id="last_name" class="block mt-1 w-full p-2 text-sm" type="text" wire:model="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
+                    <x-input-error :messages="$errors->get('last_name')" class="mt-2" /> 
+                </div>
+
+                <div class="col-md-6">
+                  <label for="student_id">Student ID <span class="text-rose-700">*</span></label>
+                  <x-text-input id="student_id" class="block mt-1 w-full p-2 text-sm" type="text" wire:model="student_id" :value="old('student_id')" required autofocus autocomplete="student_id" />
+                  {{-- @error('student_id') <span class="text-rose-800 text-sm mt-1">{{ $message }}</span> @enderror  --}}
+                  <x-input-error :messages="$errors->get('student_id')" class="mt-2" /> 
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                    <label for="email">Email <span class="text-rose-700">*</span></label>
+                    <x-text-input id="email" class="block mt-1 w-full p-2 text-sm" type="email" wire:model="email" :value="old('email')" required autofocus autocomplete="email" />
+                    {{-- @error('email') <span class="text-rose-800 text-sm mt-1">{{ $message }}</span> @enderror  --}}
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" /> 
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  {{-- <label for="image">Image <span class="text-rose-700">*</span></label>
+                  <x-text-input id="image" class="block mt-1 w-full p-2 text-sm" type="file" wire:model="image" :value="old('image')" required autofocus autocomplete="image" />
+                  <x-input-error :messages="$errors->get('image')" class="mt-2" /> --}}
+                </div>
+              </div>
+
+              <div class="modal-footer">
+                <x-modal-button data-bs-dismiss="modal" class="bg-gray-400 hover:bg-gray-900" >Close</x-modal-button>
+                <x-modal-button type="submit" >Save</x-modal-button>
+              </div>
+
+            </form>
           </div>
-          <div class="modal-footer">
-            <x-modal-button data-bs-dismiss="modal" class="bg-gray-600 hover:bg-gray-800" >Close</x-modal-button>
-            <x-modal-button >Save</x-modal-button>
-          </div>
+          
         </div>
       </div>
     </div>

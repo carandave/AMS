@@ -29,7 +29,7 @@ class UserFactory extends Factory
             'last_name' => fake()->lastName(),
             'student_id' => $this->generateStudentId(),
             'role' => fake()->randomElement(['admin', 'student']),
-            'status' => 'denied',
+            'status' => 'pending',
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
             'password' => static::$password ??= Hash::make('password'),

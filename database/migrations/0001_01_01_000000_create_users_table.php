@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('last_name');
             $table->string('student_id')->unique();
             $table->string('role')->default('student');
-            $table->string('status')->default('pending');
+            $table->string('status');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
