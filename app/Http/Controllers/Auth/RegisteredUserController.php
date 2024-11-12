@@ -36,7 +36,10 @@ class RegisteredUserController extends Controller
             'student_id' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'profile' => ['required', 'image', 'max:2048']
         ]);
+
+        $path = $request->file('profile')->store('public');
 
         $user = User::create([
             'first_name' => $request->first_name,
@@ -47,6 +50,7 @@ class RegisteredUserController extends Controller
             'status' => 'pending',
             'email' => $request->email,
             'password' => Hash::make($request->password),
+            'photo' => $path
         ]);
 
         event(new Registered($user));

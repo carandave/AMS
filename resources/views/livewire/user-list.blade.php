@@ -39,6 +39,7 @@
     <table class="table table-hover pt-6 mt-3 " >
         <thead class="" >
           <tr class="p-8" >
+            <x-table-th>Photo</x-table-th>
             @if($showStudentList)
               <x-table-th>Student ID</x-table-th>
             @endif
@@ -53,18 +54,19 @@
         <tbody>
             @foreach ($users as $user)
                 <tr>
+                    <x-table-td class="flex justify-center items-center"><img src="{{ url('storage/' . $user->photo)}}" alt="Profile" class="h-10 "></x-table-td>
                     @if($showStudentList)
                     {{-- <td class="">{{ $user->student_id }}</td> --}}
-                    <x-table-td>{{ $user->student_id }}</x-table-td>
+                    <x-table-td >{{ $user->student_id }}</x-table-td>
                     @endif
-                    <x-table-td>
+                    <x-table-td >
                       @if ($user->role == 'student')
-                          <h1>Student</h1>
+                          Student
                       @elseif ($user->role == 'admin')
-                          <h1>Admin</h1>
+                          Admin
                       @endif
                     </x-table-td>
-                    <x-table-td>{{ $user->first_name }}</x-table-td>
+                    <x-table-td >{{ $user->first_name }}</x-table-td>
                     <x-table-td>{{ $user->middle_name }}</x-table-td>
                     <x-table-td>{{ $user->last_name }}</x-table-td>
                     <x-table-td>{{ $user->email }}</x-table-td>
@@ -149,15 +151,18 @@
 
               <div class="row mt-3">
                 <div class="col-md-12">
-                  {{-- <label for="image">Image <span class="text-rose-700">*</span></label>
-                  <x-text-input id="image" class="block mt-1 w-full p-2 text-sm" type="file" wire:model="image" :value="old('image')" required autofocus autocomplete="image" />
-                  <x-input-error :messages="$errors->get('image')" class="mt-2" /> --}}
+                  <label for="photo">Image <span class="text-rose-700">*</span></label>
+                  <x-text-input id="photo" class="block mt-1 w-full p-2 text-sm" type="file" wire:model="photo" :value="old('photo')" required autofocus autocomplete="photo" />
+                  <x-input-error :messages="$errors->get('photo')" class="mt-2" />
                 </div>
               </div>
 
+              <div wire:loading wire:target="photo" class="text-green-700 mt-1 ml-1">Uploading...</div>
+
               <div class="modal-footer">
                 <x-modal-button data-bs-dismiss="modal" class="bg-gray-400 hover:bg-gray-900" >Close</x-modal-button>
-                <x-modal-button type="submit" >Save</x-modal-button>
+                <x-modal-button type="submit" >Save 
+                </x-modal-button>
               </div>
 
             </form>

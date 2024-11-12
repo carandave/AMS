@@ -6,7 +6,7 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('register') }}" class="">
+    <form method="POST" action="{{ route('register') }}" class="" enctype="multipart/form-data">
         @csrf
 
         <div class="grid grid-cols-2 gap-4">
@@ -20,7 +20,7 @@
             <!-- Middle Name -->
             <div class="">
                 <x-input-label for="middle_name" :value="__('Middle Name')" />
-                <x-text-input id="middle_name" class="block mt-1 w-full" type="text" name="middle_name" :value="old('middle_name')" required autofocus autocomplete="first_name" />
+                <x-text-input id="middle_name" class="block mt-1 w-full" type="text" name="middle_name" :value="old('middle_name')" required autofocus autocomplete="middle_name" />
                 <x-input-error :messages="$errors->get('middle_name')" class="mt-2" />
             </div>
         </div>
@@ -30,14 +30,14 @@
         <!-- Last Name -->
         <div class="mt-4">
             <x-input-label for="last_name" :value="__('Last Name')" />
-            <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required autofocus autocomplete="first_name" />
+            <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
             <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
         </div>
 
         <!-- Student ID -->
         <div class="mt-4">
             <x-input-label for="student_id" :value="__('Student ID')" />
-            <x-text-input id="student_id" class="block mt-1 w-full" type="text" name="student_id" :value="old('student_id')" required autofocus autocomplete="first_name" />
+            <x-text-input id="student_id" class="block mt-1 w-full" type="text" name="student_id" :value="old('student_id')" required autofocus autocomplete="student_id" />
             <x-input-error :messages="$errors->get('student_id')" class="mt-2" />
         </div>
 
@@ -71,6 +71,13 @@
 
                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
             </div>
+        </div>
+
+        <!-- Profile -->
+        <div class="mt-4">
+            <x-input-label for="profile" :value="__('Profile')" />
+            <x-text-input id="profile" class="block mt-1 w-full" type="file" name="profile" :value="old('profile')" required autofocus autocomplete="profile" />
+            <x-input-error :messages="$errors->get('profile')" class="mt-2" />
         </div>
 
         

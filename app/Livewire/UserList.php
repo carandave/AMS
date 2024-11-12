@@ -4,34 +4,40 @@ namespace App\Livewire;
 
 use Livewire\Component;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
-
 use Illuminate\Support\Str;
+use Livewire\WithFileUploads;
 
 class UserList extends Component
 {
 
-    use WithPagination, WithoutUrlPagination;
+    use WithPagination, WithoutUrlPagination, WithFileUploads;
 
     public $search = ''; // Property for storing the search input
     public $status = 'approved';
     public $showStudentList = false; // To determine whether to show pending users
 
-    public $first_name, $last_name, $middle_name, $student_id, $email, $image; 
+
+    public $first_name, $last_name, $middle_name, $student_id, $email, $photo; 
 
     protected function rules(){
         return ['first_name' => 'required',
             'middle_name' => 'required',
             'last_name' => 'required',
             'student_id' => 'required|unique:users,student_id',
-            'email' => 'required|unique:users,email'];
+            'email' => 'required|unique:users,email', 
+            'photo' => 'required|image|max:1024',];
+            
     }
 
     public function insert_student()
     {
         
         $validated = $this->validate();
+
+        $validated['photo'] = $this->photo;
         
         $password = Str::password(12);
 
@@ -42,7 +48,8 @@ class UserList extends Component
             'student_id' =>  $validated['student_id'],
             'status' => 'approved',
             'email' =>  $validated['email'],
-            'password' => bcrypt($password)
+            'password' => Hash::make($password),
+            'photo' => $validated['photo']->store('public'),
         ]);
 
         if($user){
