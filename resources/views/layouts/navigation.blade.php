@@ -42,11 +42,11 @@
                     </x-slot>
 
                     <x-slot name="content">
-                        @if(Auth::user()->role === 'admin')
+                        @if(Auth::user()->role === 'Admin')
                         <x-dropdown-link :href="route('admin.profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
-                        @elseif(Auth::user()->role === 'student')
+                        @elseif(Auth::user()->role === 'Student')
                         <x-dropdown-link :href="route('student.profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>

@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
             'student_id' => ['required', 'string', 'max:255', 'unique:'.User::class],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'profile' => ['required', 'image', 'max:2048']
+            'profile' => ['required', 'image', 'max:1048']
         ]);
 
         $path = $request->file('profile')->store('public');
@@ -46,8 +46,8 @@ class RegisteredUserController extends Controller
             'middle_name' => $request->middle_name,
             'last_name' => $request->last_name,
             'student_id' => $request->student_id,
-            'role' => 'student',
-            'status' => 'pending',
+            'role' => 'Student',
+            'status' => 'Pending',
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'photo' => $path

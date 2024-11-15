@@ -2,7 +2,7 @@
     <!-- Logo -->
     <div class="d-flex items-center flex-column px-1">
         @auth
-            @if(Auth::user()->role === 'admin')
+            @if(Auth::user()->role === 'Admin')
             <a href="{{ route('admin.dashboard') }}" class="d-flex alig-items-center justify-content-center" >
                 <div class="d-flex justify-content-center alig-items-center">
                     <x-application-logo />
@@ -13,7 +13,7 @@
                     <small class="fw-semibold lh-sm mb-0 pb-0 text-gray-300" >Digital Thesis Archive</small>
                 </div>
             </a>
-            @elseif(Auth::user()->role === 'student')
+            @elseif(Auth::user()->role === 'Student')
             <a href="{{ route('student.dashboard') }}" class="d-flex alig-items-center justify-content-center" >
                 <div class="d-flex justify-content-center alig-items-center">
                     <x-application-logo />
@@ -31,11 +31,11 @@
     <div class="px-2">
         <ul class="mt-5">
             @auth
-            @if(Auth::user()->role === 'admin')
+            @if(Auth::user()->role === 'Admin')
                 <x-side-nav-link link="{{ route('admin.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('admin/dashboard')">Dashboard</x-side-nav-link>
                 <x-side-nav-link icon="bi bi-people-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/users/student', 'admin/users/admin']">Users</x-side-nav-link>
                 <x-side-nav-link link="{{ route('admin.profile.edit') }}" icon="bi bi-person-fill" :active="request()->is('admin/profile/edit')">Profile</x-side-nav-link>
-            @elseif(Auth::user()->role === 'student')
+            @elseif(Auth::user()->role === 'Student')
                 <x-side-nav-link link="{{ route('student.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('student/dashboard')">Profile</x-side-nav-link>
             @endif
             @endauth

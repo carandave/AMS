@@ -4,13 +4,13 @@
       <div class="col-md-4 flex items-center space-x-4 ">
         <select name="" id="" wire:model.live="status" class="font-semibold text-sm focus:border-orange-600 focus:ring-orange-500 rounded">
           @if($showStudentList)
-          <option value="approved">All Students</option>
+          <option value="Approved">All Students</option>
           @elseif (!$showStudentList)
-          <option value="approved">All Admins</option>
+          <option value="Approved">All Admins</option>
           @endif
-          <option value="pending">Pending</option>
-          <option value="denied">Denied</option>
-          <option value="archive">Archived</option>
+          <option value="Pending">Pending</option>
+          <option value="Denied">Denied</option>
+          <option value="Archived">Archived</option>
         </select>
       </div>
       <div class="col-md-4">
@@ -33,6 +33,12 @@
     @if(session('success_student'))
       <div class="p-3 bg-green-100 mt-3 w-full rounded">
         <p class="text-gray-600"> {{ session('success_student') }}</p>
+      </div>
+    @endif
+
+    @if(session('success_official'))
+      <div class="p-3 bg-green-100 mt-3 w-full rounded">
+        <p class="text-gray-600"> {{ session('success_official') }}</p>
       </div>
     @endif
 
@@ -60,9 +66,9 @@
                     <x-table-td >{{ $user->student_id }}</x-table-td>
                     @endif
                     <x-table-td >
-                      @if ($user->role == 'student')
+                      @if ($user->role == 'Student')
                           Student
-                      @elseif ($user->role == 'admin')
+                      @elseif ($user->role == 'Admin')
                           Admin
                       @endif
                     </x-table-td>
@@ -77,14 +83,8 @@
       </table>
       {{ $users->links() }}
 
-
-      <!-- Button trigger modal -->
-    {{-- <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-      Launch static backdrop modal
-    </button> --}}
-
     <!-- Modal -->
-    <div class="modal fade" id="create_official" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div wire:ignore.self class="modal fade" id="create_official" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
@@ -92,11 +92,65 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            ...
-          </div>
-          <div class="modal-footer">
-            <x-modal-button data-bs-dismiss="modal" class="bg-gray-400 hover:bg-gray-900" >Close</x-modal-button>
-            <x-modal-button >Save</x-modal-button>
+            <form wire:submit.prevent="store_official">
+              <div class="row">
+                <div class="col-md-6">
+                    <label for="first_name">First Name <span class="text-rose-700">*</span></label>
+                    <x-text-input id="first_name" class="block mt-1 w-full p-2 text-sm" type="text" wire:model="first_name" :value="old('first_name')" required autofocus autocomplete="first_name" />
+                    <x-input-error :messages="$errors->get('first_name')" class="mt-2" /> 
+                </div>
+
+                <div class="col-md-6">
+                  <label for="middle_name">Middle Name <span class="text-rose-700">*</span></label>
+                  <x-text-input id="middle_name" class="block mt-1 w-full p-2 text-sm" type="text" wire:model="middle_name" :value="old('middle_name')" required autofocus autocomplete="middle_name" />
+                  <x-input-error :messages="$errors->get('middle_name')" class="mt-2" /> 
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-6">
+                    <label for="last_name">Last Name <span class="text-rose-700">*</span></label>
+                    <x-text-input id="last_name" class="block mt-1 w-full p-2 text-sm" type="text" wire:model="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
+                    <x-input-error :messages="$errors->get('last_name')" class="mt-2" /> 
+                </div>
+
+                <div class="col-md-6">
+                  <label for="type">Type <span class="text-rose-700">*</span></label>
+                  <select name="" id="" wire:model="type" class="block p-2 mt-1 w-full text-sm border-gray-300 focus:border-orange-600 focus:ring-orange-500 rounded-md shadow-sm" required autofocus>
+                    <option value="">Select Type</option>
+                    <option value="Admin">Admin</option>
+                    <option value="Librarian">Librarian</option>
+                  </select>
+                  {{-- @error('student_id') <span class="text-rose-800 text-sm mt-1">{{ $message }}</span> @enderror  --}}
+                  <x-input-error :messages="$errors->get('type')" class="mt-2" /> 
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                    <label for="email">Email <span class="text-rose-700">*</span></label>
+                    <x-text-input id="email" class="block mt-1 w-full p-2 text-sm" type="email" wire:model="email" :value="old('email')" required autofocus autocomplete="email" />
+                    {{-- @error('email') <span class="text-rose-800 text-sm mt-1">{{ $message }}</span> @enderror  --}}
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" /> 
+                </div>
+              </div>
+
+              <div class="row mt-3">
+                <div class="col-md-12">
+                  <label for="photo1">Image <span class="text-rose-700">*</span></label>
+                  <x-text-input id="photo" class="block mt-1 w-full p-2 text-sm" type="file" wire:model="photo" :value="old('photo')" required autofocus autocomplete="photo" />
+                  <x-input-error :messages="$errors->get('photo')" class="mt-2" />
+                </div>
+              </div>
+
+              <div wire:loading wire:target="photo" class="text-green-700 mt-1 ml-1">Uploading...</div>
+
+              <div class="modal-footer">
+                <x-modal-button data-bs-dismiss="modal" class="bg-gray-400 hover:bg-gray-900" >Close</x-modal-button>
+                <x-modal-button type="submit" >Save 
+                </x-modal-button>
+              </div> 
+            </form>
           </div>
         </div>
       </div>
@@ -110,7 +164,7 @@
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
           <div class="modal-body">
-            <form wire:submit.prevent="insert_student">
+            <form wire:submit.prevent="store_student">
               <div class="row">
                 <div class="col-md-6">
                     <label for="first_name">First Name <span class="text-rose-700">*</span></label>
@@ -139,6 +193,14 @@
                   <x-input-error :messages="$errors->get('student_id')" class="mt-2" /> 
                 </div>
               </div>
+
+              {{-- <div class="row mt-3">
+                <div class="col-md-12">
+                    <label for="last_name">Type <span class="text-rose-700">*</span></label>
+                    <x-text-input id="type" class="block mt-1 w-full p-2 text-sm" value="Student" type="text" wire:model="type" :value="old('type')" autofocus autocomplete="type" />
+                    <x-input-error :messages="$errors->get('type')" class="mt-2" /> 
+                </div>
+              </div> --}}
 
               <div class="row mt-3">
                 <div class="col-md-12">

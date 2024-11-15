@@ -44,7 +44,7 @@ class LoginRequest extends FormRequest
 
         $user = User::where('student_id', $this->student_id)->first();
 
-        if($user && $user->status === 'pending'){
+        if($user && $user->status === 'Pending'){
             throw ValidationException::withMessages([
                 'student_id' => 'Your account is pending approval. Please contact the administrator.',
             ]);

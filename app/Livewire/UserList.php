@@ -16,23 +16,34 @@ class UserList extends Component
     use WithPagination, WithoutUrlPagination, WithFileUploads;
 
     public $search = ''; // Property for storing the search input
-    public $status = 'approved';
+    public $status = 'Approved';
     public $showStudentList = false; // To determine whether to show pending users
 
 
-    public $first_name, $last_name, $middle_name, $student_id, $email, $photo; 
+    public $first_name, $last_name, $middle_name, $student_id, $type, $email, $photo; 
 
     protected function rules(){
-        return ['first_name' => 'required',
+        if($this->student_id){
+            return ['first_name' => 'required',
             'middle_name' => 'required',
             'last_name' => 'required',
             'student_id' => 'required|unique:users,student_id',
             'email' => 'required|unique:users,email', 
-            'photo' => 'required|image|max:1024',];
-            
+            'photo' => 'required|image|max:1024'];
+        }
+        else{
+            return ['first_name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
+            'student_id' => 'nullable',
+            'type' => 'required',
+            'email' => 'required|unique:users,email', 
+            'photo' => 'required|image|max:1024'];
+        }
+        
     }
 
-    public function insert_student()
+    public function store_student()
     {
         
         $validated = $this->validate();
@@ -46,7 +57,8 @@ class UserList extends Component
             'middle_name' => $validated['middle_name'],
             'last_name' =>  $validated['last_name'],
             'student_id' =>  $validated['student_id'],
-            'status' => 'approved',
+            'role' =>  'Student',
+            'status' => 'Approved',
             'email' =>  $validated['email'],
             'password' => Hash::make($password),
             'photo' => $validated['photo']->store('public'),
@@ -54,6 +66,34 @@ class UserList extends Component
 
         if($user){
             return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
+        }
+
+    }
+
+
+    public function store_official()
+    {
+        
+        $validated = $this->validate();
+
+        $validated['photo'] = $this->photo;
+        
+        $password = Str::password(12);
+
+        $user = User::create([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' =>  $validated['last_name'],
+            'student_id' => null,
+            'role' =>  'Admin',
+            'status' => 'Approved',
+            'email' =>  $validated['email'],
+            'password' => Hash::make($password),
+            'photo' => $validated['photo']->store('public'),
+        ]);
+
+        if($user){
+            return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully');
         }
 
     }
@@ -77,7 +117,7 @@ class UserList extends Component
                     ->orWhere('email', 'like', '%' . $this->search . '%');
                 });
             })->where('status', $this->status)
-              ->where('role', 'student')->paginate(10); 
+              ->where('role', 'Student')->paginate(10); 
     
             $this->resetPage();
     
@@ -96,7 +136,7 @@ class UserList extends Component
                     ->orWhere('email', 'like', '%' . $this->search . '%');
                 });
             })->where('status', $this->status)
-              ->where('role', 'admin')->paginate(10); 
+              ->where('role', 'Admin')->paginate(10); 
     
             $this->resetPage();
     

@@ -19,7 +19,7 @@ Route::get('/', function () {
 //     return view('dashboard');
 // })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'role:admin'])->group(function () {
+Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('admin/profile', [ProfileController::class, 'edit'])->name('admin.profile.edit');
     Route::patch('admin/profile', [ProfileController::class, 'update'])->name('admin.profile.update');
     Route::delete('admin/profile', [ProfileController::class, 'destroy'])->name('admin.profile.destroy');
@@ -45,7 +45,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // })->name('admin.users.student.request');
 });
 
-Route::middleware(['auth', 'role:student'])->group(function () {
+Route::middleware(['auth', 'role:Student'])->group(function () {
     Route::get('student/profile', [ProfileController::class, 'edit'])->name('student.profile.edit');
     Route::patch('student/profile', [ProfileController::class, 'update'])->name('student.profile.update');
     Route::delete('student/profile', [ProfileController::class, 'destroy'])->name('student.profile.destroy');
