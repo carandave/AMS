@@ -12,7 +12,7 @@
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
       
         {{-- Boostrap --}}
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+        {{-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous"> --}}
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
         <!-- Scripts -->
@@ -45,12 +45,25 @@
                 </div>
             </div> --}}
 
-            <div class="row mx-0 flex-grow-1">
+            {{-- <div class="row mx-0 flex-grow-1">
                 <div class="col-md-2 bg-dark vh-100 overflow-auto " style="position: sticky; top: 0; z-index: 1">
                     @include('layouts.sidebar')
                 </div>
 
                 <div class="col-md-10 px-0">
+                    @include('layouts.navigation')
+                    <main class="flex-grow-1">
+                        {{ $slot }}
+                    </main>
+                </div>
+            </div> --}}
+
+            <div class="grid grid-cols-12 min-h-screen">
+                <div class="col-span-4 md:col-span-2 bg-gray-900 h-screen overflow-auto px-2 sticky top-0 z-0 scrollbar-hide">
+                    @include('layouts.sidebar')
+                </div>
+
+                <div class="col-span-8 md:col-span-10">
                     @include('layouts.navigation')
                     <main class="flex-grow-1">
                         {{ $slot }}
@@ -62,28 +75,30 @@
             
         </div>
 
-        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+        {{-- <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script> --}}
     
         @livewireScripts
 
         <script>
 
-            document.addEventListener('show.bs.modal', function () {
-                // Remove all backdrops before opening a new modal
-                document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
-            });
+            
 
-            document.addEventListener('hidden.bs.modal', function (event) {
-                // Ensure all backdrops are removed when a modal is closed
-                document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+            // document.addEventListener('show.bs.modal', function () {
+            //     // Remove all backdrops before opening a new modal
+            //     document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
+            // });
+
+            // document.addEventListener('hidden.bs.modal', function (event) {
+            //     // Ensure all backdrops are removed when a modal is closed
+            //     document.querySelectorAll('.modal-backdrop').forEach(backdrop => backdrop.remove());
                 
-                // Optional: fully dispose of the modal instance to reset it
-                const modal = event.target;
-                const bootstrapModal = bootstrap.Modal.getInstance(modal);
-                if (bootstrapModal) {
-                    bootstrapModal.dispose();
-                }
-            });
+            //     // Optional: fully dispose of the modal instance to reset it
+            //     const modal = event.target;
+            //     const bootstrapModal = bootstrap.Modal.getInstance(modal);
+            //     if (bootstrapModal) {
+            //         bootstrapModal.dispose();
+            //     }
+            // });
 
         </script>
         

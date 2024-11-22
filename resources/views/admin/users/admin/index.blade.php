@@ -6,9 +6,9 @@
                 <div class="p-6 text-gray-900">
                   
                     <div class="flex justify-between">
-                        <x-header-side-column>Admin List </x-header-side-column>
+                        <x-header-side-column>Official List </x-header-side-column>
 
-                        <x-modal-button data-bs-toggle="modal" data-bs-target="#create_official" data-bs-backdrop="false">Create Official</x-modal-button>
+                        <x-modal-button data-modal-toggle="create_official" data-modal-target="create_official" data-bs-backdrop="false">Create Official</x-modal-button>
 
                     </div>
                    

@@ -85,7 +85,7 @@ class UserList extends Component
             'middle_name' => $validated['middle_name'],
             'last_name' =>  $validated['last_name'],
             'student_id' => null,
-            'role' =>  'Admin',
+            'role' =>  $validated['type'],
             'status' => 'Approved',
             'email' =>  $validated['email'],
             'password' => Hash::make($password),
@@ -95,6 +95,7 @@ class UserList extends Component
         if($user){
             return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully');
         }
+        
 
     }
 
@@ -135,8 +136,16 @@ class UserList extends Component
                     ->orWhere('last_name', 'like', '%' . $this->search . '%')
                     ->orWhere('email', 'like', '%' . $this->search . '%');
                 });
-            })->where('status', $this->status)
-              ->where('role', 'Admin')->paginate(10); 
+            })->where(function ($query){
+                $query->where('status', $this->status)
+                ->where(function ($subQuery){
+                    $subQuery->where('role', 'Admin')
+                    ->orWhere('role', 'Librarian');
+                });
+            })->paginate(10);
+            
+            // ->where('status', $this->status)
+            //   ->where('role', 'Admin')->paginate(10); 
     
             $this->resetPage();
     
@@ -148,3 +157,5 @@ class UserList extends Component
 
     }
 }
+
+
