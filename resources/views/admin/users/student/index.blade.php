@@ -30,6 +30,8 @@
                     <div class="row mt-3 ">
                         <div class="col-md-12 ">
                             @livewire('user-list', ['showStudentList' => true])
+
+                            
                         </div>
                     </div>
 

@@ -19,6 +19,10 @@ class UserList extends Component
     public $status = 'Approved';
     public $showStudentList = false; // To determine whether to show pending users
 
+    public $edit_user = [];
+
+    public $user = [];
+
 
     public $first_name, $last_name, $middle_name, $student_id, $type, $email, $photo; 
 
@@ -43,61 +47,74 @@ class UserList extends Component
         
     }
 
-    public function store_student()
-    {
+    public function editUser(User $user){
+
+        // $user = User::find($userId);
+
+        // if ($user) {
+        //     $this->edit_user = $user->toArray();
+        // }
+        $this->reset('user');
+        $this->user = $user->toArray();
+
         
-        $validated = $this->validate();
-
-        $validated['photo'] = $this->photo;
-        
-        $password = Str::password(12);
-
-        $user = User::create([
-            'first_name' => $validated['first_name'],
-            'middle_name' => $validated['middle_name'],
-            'last_name' =>  $validated['last_name'],
-            'student_id' =>  $validated['student_id'],
-            'role' =>  'Student',
-            'status' => 'Approved',
-            'email' =>  $validated['email'],
-            'password' => Hash::make($password),
-            'photo' => $validated['photo']->store('public'),
-        ]);
-
-        if($user){
-            return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
-        }
-
     }
 
-
-    public function store_official()
-    {
+    // public function store_student()
+    // {
         
-        $validated = $this->validate();
+    //     $validated = $this->validate();
 
-        $validated['photo'] = $this->photo;
+    //     $validated['photo'] = $this->photo;
         
-        $password = Str::password(12);
+    //     $password = Str::password(12);
 
-        $user = User::create([
-            'first_name' => $validated['first_name'],
-            'middle_name' => $validated['middle_name'],
-            'last_name' =>  $validated['last_name'],
-            'student_id' => null,
-            'role' =>  $validated['type'],
-            'status' => 'Approved',
-            'email' =>  $validated['email'],
-            'password' => Hash::make($password),
-            'photo' => $validated['photo']->store('public'),
-        ]);
+    //     $user = User::create([
+    //         'first_name' => $validated['first_name'],
+    //         'middle_name' => $validated['middle_name'],
+    //         'last_name' =>  $validated['last_name'],
+    //         'student_id' =>  $validated['student_id'],
+    //         'role' =>  'Student',
+    //         'status' => 'Approved',
+    //         'email' =>  $validated['email'],
+    //         'password' => Hash::make($password),
+    //         'photo' => $validated['photo']->store('public'),
+    //     ]);
 
-        if($user){
-            return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully');
-        }
+    //     if($user){
+    //         return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
+    //     }
+
+    // }
+
+
+    // public function store_official()
+    // {
+        
+    //     $validated = $this->validate();
+
+    //     $validated['photo'] = $this->photo;
+        
+    //     $password = Str::password(12);
+
+    //     $user = User::create([
+    //         'first_name' => $validated['first_name'],
+    //         'middle_name' => $validated['middle_name'],
+    //         'last_name' =>  $validated['last_name'],
+    //         'student_id' => null,
+    //         'role' =>  $validated['type'],
+    //         'status' => 'Approved',
+    //         'email' =>  $validated['email'],
+    //         'password' => Hash::make($password),
+    //         'photo' => $validated['photo']->store('public'),
+    //     ]);
+
+    //     if($user){
+    //         return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully');
+    //     }
         
 
-    }
+    // }
 
     public function mount($showStudentList = false)
     {
@@ -109,16 +126,18 @@ class UserList extends Component
 
         // if showStudentList is true it will go to this code 
         if($this->showStudentList){
-            $users = User::orderBy('created_at', 'desc')->when($this->search, function($query){
-                return $query->where(function($query){
-                    $query->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('middle_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('student_id', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%');
-                });
-            })->where('status', $this->status)
-              ->where('role', 'Student')->paginate(10); 
+            $users = User::orderBy('created_at', 'desc')
+                ->when($this->search, function($query){
+                    return $query->where(function($query){
+                        $query->where('first_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('student_id', 'like', '%' . $this->search . '%')
+                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                    });
+                })
+                ->where('status', $this->status)
+                ->where('role', 'Student')->paginate(10); 
     
             $this->resetPage();
     
@@ -129,20 +148,22 @@ class UserList extends Component
 
         // if showStudentList is false it will go to this code 
         else if(!$this->showStudentList){
-            $users = User::orderBy('created_at', 'desc')->when($this->search, function($query){
-                return $query->where(function($query){
-                    $query->where('first_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('middle_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('last_name', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%');
-                });
-            })->where(function ($query){
-                $query->where('status', $this->status)
-                ->where(function ($subQuery){
-                    $subQuery->where('role', 'Admin')
-                    ->orWhere('role', 'Librarian');
-                });
-            })->paginate(10);
+            $users = User::orderBy('created_at', 'desc')
+                ->when($this->search, function($query){
+                    return $query->where(function($query){
+                        $query->where('first_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('last_name', 'like', '%' . $this->search . '%')
+                        ->orWhere('email', 'like', '%' . $this->search . '%');
+                    });
+                })
+                ->where(function ($query){
+                    $query->where('status', $this->status)
+                    ->where(function ($subQuery){
+                        $subQuery->where('role', 'Admin')
+                        ->orWhere('role', 'Librarian');
+                    });
+                })->paginate(10);
             
             // ->where('status', $this->status)
             //   ->where('role', 'Admin')->paginate(10); 
