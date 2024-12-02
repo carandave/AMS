@@ -19,73 +19,137 @@ class UserList extends Component
     public $status = 'Approved';
     public $showStudentList = false; // To determine whether to show pending users
 
-    public $edit_user = [];
-
     public $user = [];
 
 
-    public $first_name, $last_name, $middle_name, $student_id, $type, $email, $photo; 
+    public $id, $first_name, $last_name, $middle_name, $student_id, $type, $email, $photo; 
 
-    protected function rules(){
-        if($this->student_id){
-            return ['first_name' => 'required',
-            'middle_name' => 'required',
-            'last_name' => 'required',
-            'student_id' => 'required|unique:users,student_id',
-            'email' => 'required|unique:users,email', 
-            'photo' => 'required|image|max:1024'];
-        }
-        else{
-            return ['first_name' => 'required',
-            'middle_name' => 'required',
-            'last_name' => 'required',
-            'student_id' => 'nullable',
-            'type' => 'required',
-            'email' => 'required|unique:users,email', 
-            'photo' => 'required|image|max:1024'];
-        }
+    // protected function rules(){
+    //     if($this->student_id){
+    //         return ['first_name' => 'required',
+    //         'middle_name' => 'required',
+    //         'last_name' => 'required',
+    //         'student_id' => 'required|unique:users,student_id',
+    //         'email' => 'required|unique:users,email', 
+    //         'photo' => 'required|image|max:1024'];
+    //     }
+    //     else{
+    //         return ['first_name' => 'required',
+    //         'middle_name' => 'required',
+    //         'last_name' => 'required',
+    //         'student_id' => 'nullable',
+    //         'type' => 'required',
+    //         'email' => 'required|unique:users,email', 
+    //         'photo' => 'required|image|max:1024'];
+    //     }
         
-    }
+    // }
 
     public function editUser(User $user){
+        $this->id = $user->id;
+        $this->first_name = $user->first_name;
+        $this->middle_name = $user->middle_name;
+        $this->last_name = $user->last_name;
+        $this->student_id = $user->student_id;
+        $this->type = $user->type;
+        $this->email = $user->email;
 
-        // $user = User::find($userId);
+        $this->type = $user->role;
+        // $this->photo = $user->photo;
 
-        // if ($user) {
-        //     $this->edit_user = $user->toArray();
-        // }
-        $this->reset('user');
-        $this->user = $user->toArray();
+    }
 
+    public function update_student(){
+
+        $validated = $this->validate(['first_name' => 'required',
+        'middle_name' => 'required',
+        'last_name' => 'required',
+        'student_id' => 'required|unique:users,student_id,' . $this->student_id . ',student_id',
+        'email' => 'required|unique:users,email,' . $this->email . ',email', 
+        'photo' => 'nullable|image|max:1024']);
+        
+        $user = User::findorFail($this->id);
+
+        if($this->photo){
+            $photoPath = $this->photo->store('public');
+        }
+        else{
+            $photoPath = $user->photo;
+        }
+
+        $user->update([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' =>  $validated['last_name'],
+            'student_id' =>  $validated['student_id'],
+            'email' =>  $validated['email'],
+            'photo' => $photoPath
+        ]);
+
+        return redirect()->route('admin.users.student')->with('success_edit_student', 'Student Updated Successfully');
         
     }
 
-    // public function store_student()
-    // {
+    public function update_official(){
+
+        $validated = $this->validate(['first_name' => 'required',
+        'middle_name' => 'required',
+        'last_name' => 'required',
+        'email' => 'required|unique:users,email,' . $this->email . ',email', 
+        'type' => 'required',
+        'photo' => 'nullable|image|max:1024']);
         
-    //     $validated = $this->validate();
+        $user = User::findorFail($this->id);
 
-    //     $validated['photo'] = $this->photo;
+        if($this->photo){
+            $photoPath = $this->photo->store('public');
+        }
+        else{
+            $photoPath = $user->photo;
+        }
+
+        $user->update([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' =>  $validated['last_name'],
+            'role' =>  $validated['type'],
+            'email' =>  $validated['email'],
+            'photo' => $photoPath
+        ]);
+
+        return redirect()->route('admin.users.admin')->with('success_edit_official', 'Official Updated Successfully');
         
-    //     $password = Str::password(12);
+        
+        
+    }
 
-    //     $user = User::create([
-    //         'first_name' => $validated['first_name'],
-    //         'middle_name' => $validated['middle_name'],
-    //         'last_name' =>  $validated['last_name'],
-    //         'student_id' =>  $validated['student_id'],
-    //         'role' =>  'Student',
-    //         'status' => 'Approved',
-    //         'email' =>  $validated['email'],
-    //         'password' => Hash::make($password),
-    //         'photo' => $validated['photo']->store('public'),
-    //     ]);
+    public function store_student()
+    {
+        
+        $validated = $this->validate();
 
-    //     if($user){
-    //         return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
-    //     }
+        
+        $validated['photo'] = $this->photo;
+        
+        $password = Str::password(12);
 
-    // }
+        $user = User::create([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' =>  $validated['last_name'],
+            'student_id' =>  $validated['student_id'],
+            'role' =>  'Student',
+            'status' => 'Approved',
+            'email' =>  $validated['email'],
+            'password' => Hash::make($password),
+            'photo' => $validated['photo']->store('public'),
+        ]);
+
+        if($user){
+            return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
+        }
+
+    }
 
 
     // public function store_official()
