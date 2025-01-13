@@ -9,6 +9,9 @@ use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
+use App\Mail\ApprovedRegistrationEmail;
+use Illuminate\Support\Facades\Mail;
+
 
 class UserList extends Component
 {
@@ -24,26 +27,38 @@ class UserList extends Component
 
     public $id, $first_name, $last_name, $middle_name, $student_id, $type, $email, $photo; 
 
-    // protected function rules(){
-    //     if($this->student_id){
-    //         return ['first_name' => 'required',
-    //         'middle_name' => 'required',
-    //         'last_name' => 'required',
-    //         'student_id' => 'required|unique:users,student_id',
-    //         'email' => 'required|unique:users,email', 
-    //         'photo' => 'required|image|max:1024'];
-    //     }
-    //     else{
-    //         return ['first_name' => 'required',
-    //         'middle_name' => 'required',
-    //         'last_name' => 'required',
-    //         'student_id' => 'nullable',
-    //         'type' => 'required',
-    //         'email' => 'required|unique:users,email', 
-    //         'photo' => 'required|image|max:1024'];
-    //     }
+    protected function rules(){
+        if($this->student_id){
+            return ['first_name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
+            'student_id' => 'required|unique:users,student_id',
+            'email' => 'required|unique:users,email', 
+            'photo' => 'required|image|max:1024'];
+        }
+        else{
+            return ['first_name' => 'required',
+            'middle_name' => 'required',
+            'last_name' => 'required',
+            'student_id' => 'nullable',
+            'type' => 'required',
+            'email' => 'required|unique:users,email', 
+            'photo' => 'required|image|max:1024'];
+        }
         
-    // }
+    }
+
+    public function resetFields()
+    {
+        $this->id = '';
+        $this->first_name = '';
+        $this->middle_name = '';
+        $this->last_name = '';
+        $this->student_id = '';
+        $this->type = '';
+        $this->email = '';
+        $this->photo = null;
+    }
 
     public function editUser(User $user){
         $this->id = $user->id;
@@ -65,6 +80,7 @@ class UserList extends Component
         'middle_name' => 'required',
         'last_name' => 'required',
         'student_id' => 'required|unique:users,student_id,' . $this->student_id . ',student_id',
+        'status' => 'required',
         'email' => 'required|unique:users,email,' . $this->email . ',email', 
         'photo' => 'nullable|image|max:1024']);
         
@@ -77,14 +93,34 @@ class UserList extends Component
             $photoPath = $user->photo;
         }
 
-        $user->update([
-            'first_name' => $validated['first_name'],
-            'middle_name' => $validated['middle_name'],
-            'last_name' =>  $validated['last_name'],
-            'student_id' =>  $validated['student_id'],
-            'email' =>  $validated['email'],
-            'photo' => $photoPath
-        ]);
+        if($validated['status'] === "Approved"){
+            
+            Mail::to($validated['email'])->send(new ApprovedRegistrationEmail($user, $validated['status']));
+
+            $user->update([
+                'first_name' => $validated['first_name'],
+                'middle_name' => $validated['middle_name'],
+                'last_name' =>  $validated['last_name'],
+                'student_id' =>  $validated['student_id'],
+                'status' =>  $validated['status'],
+                'email' =>  $validated['email'],
+                'photo' => $photoPath
+            ]);
+        }
+
+        else{
+            $user->update([
+                'first_name' => $validated['first_name'],
+                'middle_name' => $validated['middle_name'],
+                'last_name' =>  $validated['last_name'],
+                'student_id' =>  $validated['student_id'],
+                'status' =>  $validated['status'],
+                'email' =>  $validated['email'],
+                'photo' => $photoPath
+            ]);
+        }
+
+        
 
         return redirect()->route('admin.users.student')->with('success_edit_student', 'Student Updated Successfully');
         
@@ -146,39 +182,39 @@ class UserList extends Component
         ]);
 
         if($user){
-            return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
+            return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully' . $password);
         }
 
     }
 
 
-    // public function store_official()
-    // {
+    public function store_official()
+    {
         
-    //     $validated = $this->validate();
+        $validated = $this->validate();
 
-    //     $validated['photo'] = $this->photo;
+        $validated['photo'] = $this->photo;
         
-    //     $password = Str::password(12);
+        $password = Str::password(12);
 
-    //     $user = User::create([
-    //         'first_name' => $validated['first_name'],
-    //         'middle_name' => $validated['middle_name'],
-    //         'last_name' =>  $validated['last_name'],
-    //         'student_id' => null,
-    //         'role' =>  $validated['type'],
-    //         'status' => 'Approved',
-    //         'email' =>  $validated['email'],
-    //         'password' => Hash::make($password),
-    //         'photo' => $validated['photo']->store('public'),
-    //     ]);
+        $user = User::create([
+            'first_name' => $validated['first_name'],
+            'middle_name' => $validated['middle_name'],
+            'last_name' =>  $validated['last_name'],
+            'student_id' => null,
+            'role' =>  $validated['type'],
+            'status' => 'Approved',
+            'email' =>  $validated['email'],
+            'password' => Hash::make($password),
+            'photo' => $validated['photo']->store('public'),
+        ]);
 
-    //     if($user){
-    //         return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully');
-    //     }
+        if($user){
+            return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully' . $password);
+        }
         
 
-    // }
+    }
 
     public function mount($showStudentList = false)
     {
@@ -232,7 +268,7 @@ class UserList extends Component
             // ->where('status', $this->status)
             //   ->where('role', 'Admin')->paginate(10); 
     
-            $this->resetPage();
+            // $this->resetPage();
     
             return view('livewire.user-list', [
                 'users' => $users,
@@ -241,6 +277,68 @@ class UserList extends Component
         
 
     }
+
+    
+
+    
+
+    // public function archiveUser($id){
+    //     $user = User::find($id);
+
+    //     $this->id = $user->id;
+
+    // }
+
+    public function archive($userId){
+
+        $user = User::findorFail($userId);
+
+        if($user->role == "Student"){
+            if($user->status == "Archived"){
+            $user->update([
+                'status' => 'Approved'
+            ]);
+    
+            return redirect()->route('admin.users.student')->with('success_archive_student', 'Student Successfully Unarchived');
+            }
+
+            elseif($user->status != "Archived"){
+                $user->update([
+                    'status' => 'Archived'
+                ]);
+        
+                return redirect()->route('admin.users.student')->with('success_archive_student', 'Student Successfully Archived');
+            }
+        }
+
+        else{
+            if($user->status == "Archived"){
+                $user->update([
+                    'status' => 'Approved'
+                ]);
+        
+                return redirect()->route('admin.users.admin')->with('success_archive_official', 'Official Successfully Unarchived');
+            }
+    
+            elseif($user->status != "Archived"){
+                $user->update([
+                    'status' => 'Archived'
+                ]);
+        
+                return redirect()->route('admin.users.admin')->with('success_archive_official', 'Official Successfully Archived');
+            }
+
+            
+        }
+
+        
+
+    }
+
+    
+
+    
+
 }
 
 

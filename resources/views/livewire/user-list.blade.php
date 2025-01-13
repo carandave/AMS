@@ -80,7 +80,7 @@
     @if(session('success_edit_official'))
     <div id="alert-official" class="mt-3 flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
       <div class="ms-3 text-sm font-medium">
-        <span class="font-medium">{{ session('success_edit_student') }}</span> 
+        <span class="font-medium">{{ session('success_edit_official') }}</span> 
       </div>
       <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-official" aria-label="Close">
         <span class="sr-only">Close</span>
@@ -90,6 +90,47 @@
       </button>
     </div>
     @endif
+
+    @if(session('success_archive_student'))
+    <div id="alert-official" class="mt-3 flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+      <div class="ms-3 text-sm font-medium">
+        <span class="font-medium">{{ session('success_archive_student') }}</span> 
+      </div>
+      <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-official" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+      </button>
+    </div>
+    @endif
+
+    @if(session('success_archive_official'))
+    <div id="alert-official" class="mt-3 flex items-center p-4 mb-4 text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
+      <div class="ms-3 text-sm font-medium">
+        <span class="font-medium">{{ session('success_archive_official') }}</span> 
+      </div>
+      <button type="button" class="ms-auto -mx-1.5 -my-1.5 bg-green-50 text-green-500 rounded-lg focus:ring-2 focus:ring-green-400 p-1.5 hover:bg-green-200 inline-flex items-center justify-center h-8 w-8 dark:bg-gray-800 dark:text-green-400 dark:hover:bg-gray-700" data-dismiss-target="#alert-official" aria-label="Close">
+        <span class="sr-only">Close</span>
+        <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+        </svg>
+      </button>
+    </div>
+    @endif
+
+    @if(session()->has('error'))
+    <div class="alert alert-danger">
+        {{ session('error') }}
+    </div>
+@endif
+@if(session()->has('gow'))
+    <div class="alert alert-danger">
+        {{ session('gow') }}
+    </div>
+@endif
+
+    
 
     <div class="relative overflow-x-auto">
       <table class="w-full mt-3 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
@@ -159,18 +200,75 @@
 
                   @if($showStudentList)
                     <!-- Edit Student Modal Button -->
-                    <x-danger-button wire:click="editUser({{ $user->id }})"
+                    @if($user->status == "Approved" || $user->status == "Pending" || $user->status == "Denied")
+                    <x-edit-modal-button wire:click="editUser({{ $user->id }})"
                         x-data=""
                         x-on:click.prevent="$dispatch('open-modal', 'edit-student-modal-{{ $user->id }}')"
                     >{{ __('Edit') }}
-                    </x-danger-button> 
-                  @else
-                    <!-- Edit Student Modal Button -->
-                    <x-danger-button wire:click="editUser({{ $user->id }})"
+                    </x-edit-modal-button> 
+                    @endif
+                    
+                    @if($user->status != "Archived")
+                    <form wire:submit.prevent="archive({{ $user->id }})">
+                      <x-archive-modal-button>Archived</x-archive-modal-button> 
+                    </form>
+                    
+                    @endif
+
+                    @if($user->status == "Archived")
+                    <form wire:submit.prevent="archive({{ $user->id }})">
+                      <x-archive-modal-button>Unarchived</x-archive-modal-button> 
+                    </form>
+                    
+                    @endif
+                    
+                    {{-- @if($user->status == "Archived")
+                    <x-archive-modal-button wire:click="archiveUser({{ $user->id }})"
+                      >Unarchived 
+                    </x-archive-modal-button> 
+                    @endif --}}
+                    
+
+                    {{-- @if($user->status == "Approved")
+                      <x-archive-modal-button data-modal-toggle="archive_student" data-modal-target="archive_student"  wire:click="archiveUser({{ $user->id }})"
+                      
+                      >{{ __('Archive') }}
+                      </x-archive-modal-button> 
+                    @endif --}}
+
+                    {{-- <x-archive-modal-button wire:click="archiveUser({{ $user->id }})"
+                      x-data=""
+                      x-on:click.prevent="$dispatch('open-modal', 'archive-student-modal-{{ $user->id }}')"
+                    >{{ __('Archive') }}
+                    </x-archive-modal-button>  --}}
+
+                    
+                  @elseif (!$showStudentList)
+                    <!-- Edit Official Modal Button -->
+                    <x-edit-modal-button wire:click="editUser({{ $user->id }})"
                         x-data=""
                         x-on:click.prevent="$dispatch('open-modal', 'edit-official-modal-{{ $user->id }}')"
                     >{{ __('Edit') }}
-                    </x-danger-button> 
+                    </x-edit-modal-button> 
+
+                    @if($user->status != "Archived")
+                    <form wire:submit.prevent="archive({{ $user->id }})">
+                      <x-archive-modal-button>Archived</x-archive-modal-button> 
+                    </form>
+                    
+                    @endif
+
+                    @if($user->status == "Archived")
+                    <form wire:submit.prevent="archive({{ $user->id }})">
+                      <x-archive-modal-button>Unarchived</x-archive-modal-button> 
+                    </form>
+                    
+                    @endif
+
+                    {{-- <x-archive-modal-button data-modal-toggle="archive_official" data-modal-target="archive_official"  wire:click="archiveUser({{ $user->id }})"
+                      
+                      >{{ __('Archive') }}
+                      </x-archive-modal-button>  --}}
                   @endif
 
                   
@@ -182,7 +280,7 @@
                             Edit Student
                         </h3>
                         
-                        <button type="button" x-on:click="$dispatch('close')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <button type="button" wire:click="resetFields" x-on:click="$dispatch('close')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                             </svg>
@@ -235,6 +333,31 @@
                                 <x-input-error :messages="$errors->get('email')" class="mt-2" /> 
                               </div>
 
+                              @if($user->status == "Pending" || $user->status == "Denied")
+                              <div class="col-span-2 sm:col-span-2">
+                                <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                                <select name="" id="" wire:model="status" class="bg-gray-50 block p-2 mt-1 w-full text-sm border-gray-300 focus:border-orange-600 focus:ring-orange-500 rounded-md shadow-sm" required autofocus>
+                                  <option value="Pending">Pending</option>
+                                  <option value="Approved">Approved</option>
+                                  <option value="Denied">Denied</option>
+                                </select>
+                                {{-- <x-input-error :messages="$errors->get('type')" class="mt-2" />  --}}
+                              </div>
+                              @endif
+
+                              @if($user->status == "Archived")
+                              <div class="col-span-2 sm:col-span-2">
+                                <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Status</label>
+                                <select name="" id="" wire:model="status" class="bg-gray-50 block p-2 mt-1 w-full text-sm border-gray-300 focus:border-orange-600 focus:ring-orange-500 rounded-md shadow-sm" required autofocus>
+                                  <option value="Denied">Archived</option>
+                                  <option value="Active">Unarchived</option>
+                                </select>
+                                {{-- <x-input-error :messages="$errors->get('type')" class="mt-2" />  --}}
+                              </div>
+                              @endif
+
+
+
                             
                               <div class="col-span-2 ">
                                   <div class="flex gap-4">
@@ -257,13 +380,16 @@
                           </div>
                           
                           <div class="mt-6 flex justify-end">
-                              <x-secondary-button x-on:click="$dispatch('close')">
+                              <x-secondary-button wire:click="resetFields" x-on:click="$dispatch('close')">
                                   {{ __('Cancel') }}
                               </x-secondary-button>
 
                               <x-modal-button type="submit" class="focus:ring-10 focus:ring-orange-400 focus:outline-none ml-auto flex justify-center items-center">
-                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                Edit User 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-2 bi bi-pencil-square" viewBox="0 0 16 16">
+                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                                UPDATE 
                               </x-modal-button>
                           </div>
                       </form>
@@ -277,7 +403,7 @@
                             Edit Official
                         </h3>
                         
-                        <button type="button" x-on:click="$dispatch('close')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
+                        <button type="button" wire:click="resetFields" x-on:click="$dispatch('close')" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white">
                             <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                             </svg>
@@ -357,87 +483,22 @@
                           </div>
                           
                           <div class="mt-6 flex justify-end">
-                              <x-secondary-button x-on:click="$dispatch('close')">
+                              <x-secondary-button wire:click="resetFields" x-on:click="$dispatch('close')">
                                   {{ __('Cancel') }}
                               </x-secondary-button>
 
                               <x-modal-button type="submit" class="focus:ring-10 focus:ring-orange-400 focus:outline-none ml-auto flex justify-center items-center">
-                                <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                Edit User 
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-2 bi bi-pencil-square" viewBox="0 0 16 16">
+                                  <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
+                                  <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5z"/>
+                                </svg>
+                                UPDATE 
                               </x-modal-button>
                           </div>
                       </form>
                   </x-modal>
 
                 </td>
-
-                <!-- Edit Student Modal -->
-                {{-- <div wire:ignore.self id="edit_student" data-modal-backdrop="static" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full ">
-                  <div class="relative p-4 w-full max-w-md max-h-full">
-                      <!-- Modal content -->
-                      <div class="relative bg-white rounded-lg shadow dark:bg-gray-700 w-full max-w-md max-h-full animate-fadeDown">
-                          <!-- Modal header -->
-                          <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
-                              <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
-                                  Edit Student
-                              </h3>
-                              <button type="button" wire:modal="closeEditModal" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="edit_student">
-                                  <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
-                                      <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
-                                  </svg>
-                                  <span class="sr-only">Close modal</span>
-                              </button>
-                          </div>
-
-                            <!-- Modal body -->
-                              <form wire:submit.prevent="store_student" id="edit-student-form" class="p-4 md:p-5 ">
-                                <div class="grid gap-4 mb-4 grid-cols-2 px-5">
-                                    <div class="col-span-1">
-                                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">First Name</label>
-                                        <x-text-input id="first_name" wire:model="edit_user.first_name" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="text" required autofocus autocomplete="first_name" />
-                                        <x-input-error :messages="$errors->get('first_name')" class="mt-2" /> 
-                                    </div>
-                                    <div class="col-span-1 sm:col-span-1">
-                                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Middle Name</label>
-                                        <x-text-input id="middle_name" wire:model="edit_user.middle_name" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="text" required autofocus autocomplete="middle_name" />
-                                        <x-input-error :messages="$errors->get('middle_name')" class="mt-2" /> 
-                                    </div>
-
-                                    <div class="col-span-1">
-                                        <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Last Name</label>
-                                        <x-text-input id="last_name" wire:model="edit_user.last_name" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="text" required autofocus autocomplete="last_name" />
-                                        <x-input-error :messages="$errors->get('last_name')" class="mt-2" /> 
-                                    </div>
-                                    
-                                    <div class="col-span-1 sm:col-span-1">
-                                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Student ID</label>
-                                        <x-text-input id="student_id" wire:model="edit_user.student_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="text" required autofocus autocomplete="student_id" />
-                                        <x-input-error :messages="$errors->get('student_id')" class="mt-2" /> 
-                                    </div>
-
-                                    <div class="col-span-2">
-                                      <label for="name" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Email</label>
-                                      <x-text-input id="email" wire:model="edit_user.email" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="email" required autofocus autocomplete="email" />
-                                      <x-input-error :messages="$errors->get('email')" class="mt-2" /> 
-                                    </div>
-                                  
-                                    <div class="col-span-2 ">
-                                        <label for="price" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Image</label>
-                                        <x-text-input id="photo" class="text-sm" type="file" wire:model="photo" :value="old('photo')" required autofocus autocomplete="photo" />
-                                        <x-input-error :messages="$errors->get('photo')" class="mt-2" />
-                                    </div>
-
-                                    <div class="col-span-2 mb-4">
-                                      <x-modal-button type="submit" class="focus:ring-10 focus:ring-orange-400 focus:outline-none ml-auto flex justify-center items-center">
-                                        <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                        Save 
-                                      </x-modal-button>
-                                    </div>
-                                </div>
-                            </form>
-                      </div>
-                  </div>
-                </div>  --}}
 
             </tr>
             @endforeach
@@ -446,6 +507,8 @@
       {{ $users->links() }}
     </div>
 
+
+    
 
 
     
@@ -459,7 +522,7 @@
                   <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                       Create New Official
                   </h3>
-                  <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="create_official">
+                  <button wire:click="resetFields" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="create_official">
                       <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                       </svg>
@@ -530,7 +593,7 @@
                   <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
                       Create New Student
                   </h3>
-                  <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="create_student">
+                  <button wire:click="resetFields" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="create_student">
                       <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
                           <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
                       </svg>
@@ -586,5 +649,113 @@
       </div>
     </div> 
 
+
+    {{-- Archive Codes --}}
+
+    {{-- <div wire:ignore.self id="archive_student" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+      <div class="relative p-4 w-full max-w-md max-h-full">
+         
+          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+             
+              <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                     
+                      {{ $status == 'Archived' ? 'Unarchived Student' : 'Archived Student'}}
+                  </h3>
+                  <button wire:click="resetFields" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="archive_student">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                      </svg>
+                      <span class="sr-only">Close modal</span>
+                  </button>
+              </div>
+             
+              <form wire:submit.prevent="archive" class="p-4 md:p-5">
+
+                <h1 class="text-lg">Are you sure you want to {{ $status == 'Archived' ? 'Unarchived' : 'Archived'}} this Student?</h1>
+
+                <x-text-input id="id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="id"/>
+
+                  <x-modal-button type="submit" class="bg-red-600 hover:bg-red-700 focus:ring-10 mt-10 focus:ring-danger-400 focus:outline-none ml-auto flex justify-center items-center">
+                    <i class="bi bi-archive-fill mr-3"></i>
+                    {{ $status == 'Archived' ? 'UNARCHIVED' : 'ARCHIVED'}} 
+                  </x-modal-button>
+              </form>
+          </div>
+      </div>
+    </div>
+
+    <div wire:ignore.self id="archive_official" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+      <div class="relative p-4 w-full max-w-md max-h-full">
+          
+          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+             
+              <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                      Archive Official
+                  </h3>
+                  <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="archive_official">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                      </svg>
+                      <span class="sr-only">Close modal</span>
+                  </button>
+              </div>
+            
+              <form wire:submit.prevent="archive" class="p-4 md:p-5">
+
+                <h1 class="text-lg">Are you sure you want to Archive this Official?</h1>
+
+                <x-text-input id="id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="id"/>
+
+                <x-modal-button type="submit" class="bg-red-600 hover:bg-red-700 focus:ring-10 mt-10 focus:ring-danger-400 focus:outline-none ml-auto flex justify-center items-center">
+                  <i class="bi bi-archive-fill mr-3"></i>
+                  ARCHIVE 
+                </x-modal-button>
+              </form>
+          </div>
+      </div>
+    </div> --}}
+
+
+    {{-- UNARCHIVE --}}
+
+
+    {{-- <div wire:ignore.self id="unarchive_student" tabindex="-1" aria-hidden="true" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 justify-center items-center w-full md:inset-0 h-[calc(100%-1rem)] max-h-full">
+      <div class="relative p-4 w-full max-w-md max-h-full">
+         
+          <div class="relative bg-white rounded-lg shadow dark:bg-gray-700">
+             
+              <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                  <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                      Unarchive Student1
+                  </h3>
+                  <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-toggle="unarchive_student">
+                      <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                          <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                      </svg>
+                      <span class="sr-only">Close modal</span>
+                  </button>
+              </div>
+            
+              <form wire:submit.prevent="unarchive" class="p-4 md:p-5">
+
+                <h1 class="text-lg">Are you sure you want to Unarchive this Student?</h1>
+
+                <x-text-input id="id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="id"/>
+
+                  <x-modal-button type="submit" class="bg-red-600 hover:bg-red-700 focus:ring-10 mt-10 focus:ring-danger-400 focus:outline-none ml-auto flex justify-center items-center">
+                    <i class="bi bi-archive-fill mr-3"></i>
+                    UNARCHIVE 
+                  </x-modal-button>
+              </form>
+          </div>
+      </div>
+    </div> --}}
+
+
     
 </div>
+
+
+

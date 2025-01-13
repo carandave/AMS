@@ -35,6 +35,10 @@ class AuthenticatedSessionController extends Controller
         else if($request->user()->role === 'Student'){
             return redirect('student/dashboard');
         }
+
+        else if($request->user()->role === 'Librarian'){
+            return redirect('student/dashboard');
+        }
         
         else{
             abort(404);
