@@ -12,6 +12,8 @@ use Livewire\WithFileUploads;
 use App\Mail\ApprovedRegistrationEmail;
 use Illuminate\Support\Facades\Mail;
 
+use Carbon\Carbon;
+
 
 class UserList extends Component
 {
@@ -83,8 +85,11 @@ class UserList extends Component
         'status' => 'required',
         'email' => 'required|unique:users,email,' . $this->email . ',email', 
         'photo' => 'nullable|image|max:1024']);
+
+
         
         $user = User::findorFail($this->id);
+        
 
         if($this->photo){
             $photoPath = $this->photo->store('public');
@@ -93,10 +98,12 @@ class UserList extends Component
             $photoPath = $user->photo;
         }
 
-        if($validated['status'] === "Approved"){
-            
-            Mail::to($validated['email'])->send(new ApprovedRegistrationEmail($user, $validated['status']));
+        // dd($user->status);
 
+        $date_to_day = Carbon::now();
+        $formattedDateToDay = $date_to_day->format('F j, Y');
+
+        if($user->status === "Approved"){
             $user->update([
                 'first_name' => $validated['first_name'],
                 'middle_name' => $validated['middle_name'],
@@ -106,21 +113,64 @@ class UserList extends Component
                 'email' =>  $validated['email'],
                 'photo' => $photoPath
             ]);
+
         }
 
         else{
-            $user->update([
-                'first_name' => $validated['first_name'],
-                'middle_name' => $validated['middle_name'],
-                'last_name' =>  $validated['last_name'],
-                'student_id' =>  $validated['student_id'],
-                'status' =>  $validated['status'],
-                'email' =>  $validated['email'],
-                'photo' => $photoPath
-            ]);
-        }
+            if($validated['status'] === "Approved"){
 
-        
+                $newPassword = Str::random(8);
+
+                Mail::to($validated['email'])->send(new ApprovedRegistrationEmail($user, $formattedDateToDay, $validated['status'], $newPassword));
+
+                $hashedPassword = Hash::make($newPassword);
+                
+                $user->update([
+                    'first_name' => $validated['first_name'],
+                    'middle_name' => $validated['middle_name'],
+                    'last_name' =>  $validated['last_name'],
+                    'student_id' =>  $validated['student_id'],
+                    'status' =>  $validated['status'],
+                    'email' =>  $validated['email'],
+                    'photo' => $photoPath,
+                    'password' => $hashedPassword
+                ]);
+
+            }
+
+            else if($validated['status'] === "Denied"){
+
+                $newPassword = Str::random(8);
+            
+                Mail::to($validated['email'])->send(new ApprovedRegistrationEmail($user, $formattedDateToDay, $validated['status'], $newPassword));
+
+                $hashedPassword = Hash::make($newPassword);
+
+                $user->update([
+                    'first_name' => $validated['first_name'],
+                    'middle_name' => $validated['middle_name'],
+                    'last_name' =>  $validated['last_name'],
+                    'student_id' =>  $validated['student_id'],
+                    'status' =>  $validated['status'],
+                    'email' =>  $validated['email'],
+                    'photo' => $photoPath
+                ]);
+
+            }
+
+            else{
+                $user->update([
+                    'first_name' => $validated['first_name'],
+                    'middle_name' => $validated['middle_name'],
+                    'last_name' =>  $validated['last_name'],
+                    'student_id' =>  $validated['student_id'],
+                    'status' =>  $validated['status'],
+                    'email' =>  $validated['email'],
+                    'photo' => $photoPath
+                ]);
+
+            }
+        }
 
         return redirect()->route('admin.users.student')->with('success_edit_student', 'Student Updated Successfully');
         
@@ -167,7 +217,10 @@ class UserList extends Component
         
         $validated['photo'] = $this->photo;
         
-        $password = Str::password(12);
+        $newPassword = Str::password(12);
+
+        $date_to_day = Carbon::now();
+        $formattedDateToDay = $date_to_day->format('F j, Y');
 
         $user = User::create([
             'first_name' => $validated['first_name'],
@@ -177,12 +230,18 @@ class UserList extends Component
             'role' =>  'Student',
             'status' => 'Approved',
             'email' =>  $validated['email'],
-            'password' => Hash::make($password),
+            'password' => Hash::make($newPassword),
             'photo' => $validated['photo']->store('public'),
         ]);
 
+        $status = "New Account";
+
         if($user){
-            return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully' . $password);
+
+            Mail::to($validated['email'])->send(new ApprovedRegistrationEmail($user, $formattedDateToDay, $status, $newPassword));
+
+
+            return redirect()->route('admin.users.student')->with('success_student', 'Student Created Successfully');
         }
 
     }
@@ -195,7 +254,10 @@ class UserList extends Component
 
         $validated['photo'] = $this->photo;
         
-        $password = Str::password(12);
+        $newPassword = Str::random(8);
+
+        $date_to_day = Carbon::now();
+        $formattedDateToDay = $date_to_day->format('F j, Y');
 
         $user = User::create([
             'first_name' => $validated['first_name'],
@@ -205,12 +267,17 @@ class UserList extends Component
             'role' =>  $validated['type'],
             'status' => 'Approved',
             'email' =>  $validated['email'],
-            'password' => Hash::make($password),
+            'password' => Hash::make($newPassword),
             'photo' => $validated['photo']->store('public'),
         ]);
 
+        $status = "New Account";
+
         if($user){
-            return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully' . $password);
+
+            Mail::to($validated['email'])->send(new ApprovedRegistrationEmail($user, $formattedDateToDay, $status, $newPassword));
+
+            return redirect()->route('admin.users.admin')->with('success_official', 'Official Created Successfully');
         }
         
 
@@ -261,7 +328,7 @@ class UserList extends Component
                     $query->where('status', $this->status)
                     ->where(function ($subQuery){
                         $subQuery->where('role', 'Admin')
-                        ->orWhere('role', 'Librarian');
+                        ->orWhere('role', 'Faculty');
                     });
                 })->paginate(10);
             

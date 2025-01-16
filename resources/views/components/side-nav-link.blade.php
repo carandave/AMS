@@ -21,20 +21,38 @@
     </a>
 
     {{-- Dropdown items --}}
-    @if($hasDropdown)
+    @if($hasDropdown && collect($dropdownActiveRoutes)->intersect(['admin/users/student', 'admin/users/admin'])->isNotEmpty())
         <ul x-show="open" x-cloak class="mt-1 ml-7 space-y-1">
             <li class="flex flex-col ">
                 <a wire:navigate href="{{ route('admin.users.student') }}" 
-                   class="{{ request()->is('admin/users/student') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                class="{{ request()->is('admin/users/student') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
                     Student List
                 </a>
             </li>
             <li class="flex flex-col mb-1">
                 <a wire:navigate href="{{ route('admin.users.admin') }}" 
-                   class="{{ request()->is('admin/users/admin') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                class="{{ request()->is('admin/users/admin') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
                     Official List
                 </a>
             </li>
         </ul>
     @endif
+
+    @if($hasDropdown && collect($dropdownActiveRoutes)->intersect(['admin/department/course', 'admin/department/major'])->isNotEmpty())
+        <ul x-show="open" x-cloak class="mt-1 ml-7 space-y-1">
+            <li class="flex flex-col ">
+                <a wire:navigate href="{{ route('admin.department.course') }}" 
+                class="{{ request()->is('admin/department/course') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                    Course List
+                </a>
+            </li>
+            <li class="flex flex-col mb-1">
+                <a wire:navigate href="{{ route('admin.department.major') }}" 
+                class="{{ request()->is('admin/department/major') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                    Major List
+                </a>
+            </li>
+        </ul>
+    @endif
+
 </li>

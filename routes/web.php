@@ -27,7 +27,8 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('admin/dashboard', function(){
         return view('admin.dashboard');
     })->name('admin.dashboard');
-    
+
+    // Users Menu Route
     Route::get('admin/users/student', function(){
         return view('admin.users.student.index');
     })->name('admin.users.student');
@@ -35,6 +36,16 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('admin/users/admin', function(){
         return view('admin.users.admin.index');
     })->name('admin.users.admin');
+
+
+    // Department Menu Route
+    Route::get('admin/department/course', function(){
+        return view('admin.department.course.index');
+    })->name('admin.department.course');
+
+    Route::get('admin/department/major', function(){
+        return view('admin.department.major.index');
+    })->name('admin.department.major');
 
     // Route::get('admin/users/active', function(){
     //     return view('admin.users.active');
@@ -45,6 +56,34 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     // })->name('admin.users.student.request');
 });
 
+Route::middleware(['auth', 'role:Faculty'])->group(function () {
+
+    Route::get('faculty/profile', [ProfileController::class, 'edit'])->name('faculty.profile.edit');
+    Route::patch('faculty/profile', [ProfileController::class, 'update'])->name('faculty.profile.update');
+    Route::delete('faculty/profile', [ProfileController::class, 'destroy'])->name('faculty.profile.destroy');
+
+    Route::get('faculty/dashboard', function(){
+        return view('faculty.dashboard');
+    })->name('faculty.dashboard');
+
+    // Route::get('faculty/profile', [ProfileController::class, 'edit'])->name('faculty.profile.edit');
+    // Route::patch('faculty/profile', [ProfileController::class, 'update'])->name('faculty.profile.update');
+    // Route::delete('faculty/profile', [ProfileController::class, 'destroy'])->name('faculty.profile.destroy');
+
+    // Route::get('faculty/dashboard', function(){
+    //     return view('faculty.dashboard');
+    // })->name('faculty.dashboard');
+    
+    // Route::get('faculty/users/student', function(){
+    //     return view('faculty.users.student.index');
+    // })->name('faculty.users.student');
+
+    // Route::get('faculty/users/admin', function(){
+    //     return view('faculty.users.admin.index');
+    // })->name('faculty.users.admin');
+
+});
+
 Route::middleware(['auth', 'role:Student'])->group(function () {
     Route::get('student/profile', [ProfileController::class, 'edit'])->name('student.profile.edit');
     Route::patch('student/profile', [ProfileController::class, 'update'])->name('student.profile.update');
@@ -53,6 +92,10 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
     Route::get('student/dashboard', function(){
         return view('student.dashboard');
     })->name('student.dashboard');
+
+    Route::get('student/list-thesis', function(){
+        return view('student.thesis.index');
+    })->name('student.list-thesis');
 });
 
 

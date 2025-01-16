@@ -24,6 +24,17 @@
                     <small class="fw-semibold lh-sm mb-0 pb-0 text-gray-300" >Digital Thesis Archive</small>
                 </div>
             </a>
+            @elseif(Auth::user()->role === 'Faculty')
+            <a href="{{ route('faculty.dashboard') }}" class="flex items-center justify-center" >
+                <div class="flex justify-center items-center">
+                    <x-application-logo />
+                </div>
+
+                <div class="flex justify-center items-center flex-col my-auto ms-1 " >
+                    <p class="text-white text-left fw-semibold lh-sm fs-6 mb-0 pb-0 " >PBTS MACAMOT</p>
+                    <small class="fw-semibold lh-sm mb-0 pb-0 text-gray-300" >Digital Thesis Archive</small>
+                </div>
+            </a>
             @endif
         @endauth
     </div>
@@ -34,9 +45,12 @@
             @if(Auth::user()->role === 'Admin')
                 <x-side-nav-link link="{{ route('admin.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('admin/dashboard')">Dashboard</x-side-nav-link>
                 <x-side-nav-link icon="bi bi-people-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/users/student', 'admin/users/admin']">Users</x-side-nav-link>
-                <x-side-nav-link link="{{ route('admin.profile.edit') }}" icon="bi bi-person-fill" :active="request()->is('admin/profile')">Profile</x-side-nav-link>
+                <x-side-nav-link icon="bi bi-building-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/department/course', 'admin/department/major']">Deparment</x-side-nav-link>
             @elseif(Auth::user()->role === 'Student')
                 <x-side-nav-link link="{{ route('student.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('student/dashboard')">Profile</x-side-nav-link>
+                <x-side-nav-link link="{{ route('student.list-thesis') }}" icon="bi bi-journals" :active="request()->is('student/list-thesis')">List of Thesis</x-side-nav-link>
+            @elseif(Auth::user()->role === 'Faculty')
+                <x-side-nav-link link="{{ route('faculty.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('faculty/dashboard')">Profile</x-side-nav-link>
             @endif
             @endauth
             

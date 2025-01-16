@@ -50,6 +50,10 @@
                         <x-dropdown-link :href="route('student.profile.edit')">
                             {{ __('Profile') }}
                         </x-dropdown-link>
+                        @elseif(Auth::user()->role === 'Faculty')
+                        <x-dropdown-link :href="route('faculty.profile.edit')">
+                            {{ __('Profile') }}
+                        </x-dropdown-link>
                         @endif
 
                         <!-- Authentication -->

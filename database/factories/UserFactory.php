@@ -28,7 +28,7 @@ class UserFactory extends Factory
             'middle_name' => fake()->lastName(),
             'last_name' => fake()->lastName(),
             'student_id' => $this->generateStudentId(),
-            'role' => fake()->randomElement(['admin', 'student']),
+            'role' => fake()->randomElement(['Admin', 'Student', 'Faculty']),
             'status' => 'pending',
             'email' => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),

@@ -18,14 +18,19 @@ class ApprovedRegistrationEmail extends Mailable
      */
 
     public $user;
+    public $datetoday;
     public $status;
+    public $newpassword;
+    
 
 
-    public function __construct($user, $status)
+    public function __construct($user, $datetoday, $status, $newpassword)
     {
         //
         $this->user = $user;
+        $this->datetoday = $datetoday;
         $this->status = $status;
+        $this->newpassword = $newpassword;
     }
 
     /**
@@ -34,7 +39,7 @@ class ApprovedRegistrationEmail extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Approved Registration Email',
+            subject: 'Notification Registration Email',
         );
     }
 
