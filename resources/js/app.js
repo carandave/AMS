@@ -37,6 +37,8 @@ document.addEventListener('livewire:navigated', () => { // We will reinitialize 
 })
 
 
+
+
 //     const modal = document.getElementById('edit_student');
 //   const form = document.getElementById('edit-student-form');
 

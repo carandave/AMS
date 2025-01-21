@@ -304,7 +304,8 @@ class UserList extends Component
                     });
                 })
                 ->where('status', $this->status)
-                ->where('role', 'Student')->paginate(10); 
+                ->where('role', 'Student')
+                ->paginate(10); 
     
             $this->resetPage();
     
@@ -335,7 +336,7 @@ class UserList extends Component
             // ->where('status', $this->status)
             //   ->where('role', 'Admin')->paginate(10); 
     
-            // $this->resetPage();
+            $this->resetPage();
     
             return view('livewire.user-list', [
                 'users' => $users,
@@ -391,6 +392,8 @@ class UserList extends Component
                 $user->update([
                     'status' => 'Archived'
                 ]);
+
+                
         
                 return redirect()->route('admin.users.admin')->with('success_archive_official', 'Official Successfully Archived');
             }

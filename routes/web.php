@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ThesisController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -96,6 +97,12 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
     Route::get('student/list-thesis', function(){
         return view('student.thesis.index');
     })->name('student.list-thesis');
+
+    // Thesis Routes
+    Route::get('student/create-thesis', function(){
+        return view('student.thesis.create');
+    })->name('student.list-thesis.create');
+
 });
 
 

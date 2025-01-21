@@ -209,14 +209,14 @@
                     @endif
                     
                     @if($user->status != "Archived")
-                    <form wire:submit.prevent="archive({{ $user->id }})">
+                    <form wire:submit.prevent="archive('{{ $user->id }}')">
                       <x-archive-modal-button>Archived</x-archive-modal-button> 
                     </form>
                     
                     @endif
 
                     @if($user->status == "Archived")
-                    <form wire:submit.prevent="archive({{ $user->id }})">
+                    <form wire:submit.prevent="archive('{{ $user->id }}')">
                       <x-archive-modal-button>Unarchived</x-archive-modal-button> 
                     </form>
                     
