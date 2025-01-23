@@ -194,7 +194,7 @@
                     </div>
                 </td>
                 <td class="px-6 py-4">
-                  {{ $user->created_at }}
+                  {{ \Carbon\Carbon::parse($user->created_at)->format('F j, Y') }}
                 </td>
                 <td class="px-6 py-4 flex justify-evenly">
 

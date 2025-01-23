@@ -48,7 +48,8 @@
                 <x-side-nav-link icon="bi bi-building-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/department/course', 'admin/department/major']">Deparment</x-side-nav-link>
             @elseif(Auth::user()->role === 'Student')
                 <x-side-nav-link link="{{ route('student.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('student/dashboard')">Profile</x-side-nav-link>
-                <x-side-nav-link link="{{ route('student.list-thesis') }}" icon="bi bi-journals" :active="request()->is('student/list-thesis')">List of Thesis</x-side-nav-link>
+                <x-side-nav-link link="{{ route('student.my-list-thesis') }}" icon="bi bi-journals" :active="request()->is('student/my-list-thesis')">My Submitted Thesis</x-side-nav-link>
+                <x-side-nav-link link="{{ route('student.list-thesis') }}" icon="bi bi-files-alt" :active="request()->is('student/list-thesis')">List of All Thesis</x-side-nav-link>
             @elseif(Auth::user()->role === 'Faculty')
                 <x-side-nav-link link="{{ route('faculty.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('faculty/dashboard')">Profile</x-side-nav-link>
             @endif

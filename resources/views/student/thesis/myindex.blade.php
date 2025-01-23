@@ -6,7 +6,7 @@
                 <div class="p-6 text-gray-900">
                   
                     <div class="flex justify-between">
-                        <x-header-side-column>List of Thesis </x-header-side-column>
+                        <x-header-side-column>My List of Thesis</x-header-side-column>
                         <x-create-button href="{{ route('student.list-thesis.create') }}">Create Thesis</x-create-button>
                     </div>
                    
@@ -27,7 +27,7 @@
                                 </div>
                             @endif
 
-                            @livewire('thesis-list', ['showOwnThesisList' => false])
+                            @livewire('thesis-list', ['showOwnThesisList' => true])
                         </div>
                     </div>
                     

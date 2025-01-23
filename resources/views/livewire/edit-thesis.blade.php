@@ -1,11 +1,7 @@
 <div>
-    
-
-    
-
     <div class="row mt-10 ">
         <div class="col-md-12">
-            
+            {{-- {{ $thesis }} --}}
             <form wire:submit.prevent="store_thesis">
                 <div class="grid gap-6 grid-cols-2">
                    
@@ -85,22 +81,22 @@
                 <div class="grid gap-6 grid-cols-2 mt-3">
                     <div class="col-span-1">
                         <label for="departments_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Course Name</label>
-                        <x-dropdown-input id="departments_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model.live="departments_id" required >
+                        {{-- <x-dropdown-input id="departments_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model.live="departments_id" required >
                             <option value="">Select Course</option> <!-- Default option -->
                             @foreach ($departments as $department)
                                 <option value="{{ $department->id }}">{{ $department->name }}</option>
                             @endforeach
-                        </x-dropdown-input>
+                        </x-dropdown-input> --}}
                         <x-input-error :messages="$errors->get('departments_id')" class="mt-2" /> 
                     </div>
     
                     <div class="col-span-1">
                         <label for="sub_departments_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Major Name</label>
-                        <x-dropdown-input id="sub_departments_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model="sub_departments_id" >
+                        <x-dropdown-input id="sub_departments_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model="sub_departments_id" required>
                             <option value="">Select Major</option> <!-- Default option -->
-                            @foreach ($subdepartments as $subdepartment)
+                            {{-- @foreach ($subdepartments as $subdepartment)
                                 <option value="{{ $subdepartment->id }}">{{ $subdepartment->name }}</option>
-                            @endforeach
+                            @endforeach --}}
                         </x-dropdown-input>
                         <x-input-error :messages="$errors->get('sub_departments_id')" class="mt-2" /> 
                     </div>

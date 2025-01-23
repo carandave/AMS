@@ -94,14 +94,28 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
         return view('student.dashboard');
     })->name('student.dashboard');
 
+    
+
+    // Thesis Routes
+
+    // Student List of Thesis
+    Route::get('student/my-list-thesis', function(){
+        return view('student.thesis.myindex');
+    })->name('student.my-list-thesis');
+
     Route::get('student/list-thesis', function(){
         return view('student.thesis.index');
     })->name('student.list-thesis');
 
-    // Thesis Routes
     Route::get('student/create-thesis', function(){
         return view('student.thesis.create');
     })->name('student.list-thesis.create');
+
+    Route::get('student/edit-thesis', function(){
+        return view('student.thesis.edit');
+    })->name('student.list-thesis.edit');
+    
+    
 
 });
 
