@@ -22,7 +22,7 @@ class Thesis extends Model
         'sub_department_id',
         'adviser',
         'submission_date',
-        'statys',
+        'status',
         'photo',
         'file_path',
         'approval_date',

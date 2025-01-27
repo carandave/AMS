@@ -20,9 +20,29 @@ class ThesisList extends Component
     public $subdepartments = [];
 
     public $thesis_id;
-    public $title, $year, $author, $adviser, $keywords, $abstract, $photo, $file_path;
+    public $user_id, $title, $year, $author, $adviser, $keywords, $abstract, $oldPhoto, $photo, $old_file_path, $file_path, $rejection_reason;
 
     public $submission_date;
+    public $status = "Approved";
+    public $old_status;
+
+    protected function rules(){
+        return [
+            'title' => 'required',
+            'year' => 'required',
+            'author' => 'required',
+            'adviser' => 'required',
+            'keywords' => 'required',
+            'user_id' => 'required',
+            'departments_id' => 'required',
+            'sub_departments_id' => 'nullable',
+            'abstract' => 'required',
+            'photo' => 'nullable|image|max:2048',
+            'file_path' => 'nullable|file|mimes:pdf',
+            'old_status' => 'nullable',
+            'rejection_reason' => 'nullable',
+        ];
+    }
 
     public function resetFields(){
         $this->title = "";
@@ -40,6 +60,8 @@ class ThesisList extends Component
         $this->abstract = "";
         $this->photo = "";
         $this->file_path = "";
+        $this->old_status = "";
+        $this->rejection_reason = "";
     }
 
     public function mount($showOwnThesisList = true){
@@ -54,43 +76,17 @@ class ThesisList extends Component
 
             $user_id = Auth::user()->id;
 
-            $list_thesis = Thesis::where('user_id', $user_id)->paginate(10);
+            $list_thesis = Thesis::where('status', $this->status)->where('user_id', $user_id)->paginate(10);
 
             return view('livewire.thesis-list', ['list_thesis' => $list_thesis, 'departments' => $departments, 'subdepartments' => $this->subdepartments]);
         }
         else{
-            $list_thesis = Thesis::orderBy('id', 'desc')->paginate(10);
+            $list_thesis = Thesis::where('status', $this->status)->orderBy('id', 'desc')->paginate(10);
 
             return view('livewire.thesis-list', ['list_thesis' => $list_thesis, 'departments' => $departments, 'subdepartments' => $this->subdepartments]);
         }
 
         
-    }
-
-    public function editThesis($thesis_id){
-
-        $thesis = Thesis::with(['department', 'sub_department'])->findOrFail($thesis_id);
-
-        $this->title = $thesis->title;
-        $this->year = $thesis->year;
-        $this->author = $thesis->author;
-        $this->adviser = $thesis->adviser;
-        $this->departments_id = $thesis->department_id;
-        $this->departments_name = $thesis->department->name;
-        $this->sub_departments_id = $thesis->sub_department_id;
-        $this->sub_departments_name = $thesis->sub_department->name;
-        // $this->sub_departments_name = $thesis->sub_department->name;
-        $this->subdepartments = SubDepartment::where('departments_id', $this->departments_id)->get();
-        $this->submission_date = $thesis->submission_date;
-        $this->keywords = $thesis->keywords;
-        $this->abstract = $thesis->abstract;
-        $this->photo = $thesis->photo;
-        $this->file_path = $thesis->file_path;
-
-        // $thesis = Thesis::findOrFail($id);
-        // // return view('livewire.edit-thesis', ['thesis' => $thesis]);
-
-        // return redirect()->route('student.list-thesis.edit', ['id' => $thesis->id]);
     }
 
     public function updatedDepartmentsId(){
@@ -105,4 +101,99 @@ class ThesisList extends Component
         
         
     }
+
+    public function editThesis($thesis_id){
+
+        $thesis = Thesis::with(['department', 'sub_department'])->findOrFail($thesis_id);
+        
+        $this->thesis_id = $thesis->id;
+        $this->user_id = $thesis->user_id;
+        $this->title = $thesis->title;
+        $this->year = $thesis->year;
+        $this->author = $thesis->author;
+        $this->adviser = $thesis->adviser;
+        $this->departments_id = $thesis->department_id;
+        $this->departments_name = $thesis->department->name;
+        $this->sub_departments_id = $thesis->sub_department_id;
+        $this->sub_departments_name = $thesis->sub_department->name;
+        // $this->sub_departments_name = $thesis->sub_department->name;
+        $this->subdepartments = SubDepartment::where('departments_id', $this->departments_id)->get();
+        $this->submission_date = $thesis->submission_date;
+        $this->keywords = $thesis->keywords;
+        $this->abstract = $thesis->abstract;
+        $this->oldPhoto = $thesis->photo;
+        $this->old_file_path = $thesis->file_path;
+        $this->old_status = $thesis->status;
+        $this->rejection_reason = $thesis->rejection_reason;
+
+
+        // $thesis = Thesis::findOrFail($id);
+        // // return view('livewire.edit-thesis', ['thesis' => $thesis]);
+
+        // return redirect()->route('student.list-thesis.edit', ['id' => $thesis->id]);
+    }
+
+    public function update_thesis(){
+
+        $validated = $this->validate();
+
+        $thesis = Thesis::findOrFail($this->thesis_id);
+
+        if($this->photo){
+            $photoPath = $this->photo->store('public');
+        }
+
+        else{
+            $photoPath = $thesis->photo;
+        }
+
+        
+
+        if($this->file_path){
+            $filePath = $this->file_path->store('public');
+        }
+
+        else{
+            $filePath = $thesis->file_path;
+        }
+
+        $thesis->update([
+            'title' => $validated['title'],
+            'year' => $validated['year'],
+            'author' => $validated['author'],
+            'adviser' => $validated['adviser'],
+            'keywords' => $validated['keywords'],
+            'user_id' => $validated['user_id'],
+            'departments_id' => $validated['departments_id'],
+            'sub_departments_id' => $validated['sub_departments_id'],
+            'abstract' => $validated['abstract'],
+            'photo' => $photoPath,
+            'file_path' => $filePath,
+            'status' => $this->old_status,
+            'rejection_reason' => $validated['rejection_reason'],
+        ]);
+
+        if($thesis){
+            $role = Auth::user()->role;
+
+            if($role == 'Admin'){
+                return redirect()->route('admin.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+            }
+
+            else{
+                return redirect()->route('student.my-list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+            }
+            
+        }
+        
+
+    }
+
+    public function delete(Thesis $thesis){
+        $thesis->delete();
+
+        return redirect()->route('student.my-list-thesis')->with('success_deleted_thesis', 'Thesis Deleted Successfully');
+    }
+
+    
 }
