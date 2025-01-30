@@ -6,6 +6,7 @@ use Livewire\Component;
 use App\Models\Department;
 use App\Models\SubDepartment;
 use App\Models\Thesis;
+use App\Models\User;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Auth;
 
@@ -19,6 +20,7 @@ class GetDepartment extends Component
 
     public $subdepartments = [];
     public $departments;
+    public $users;
 
     // public function mount(){
     //     $this->subdepartments = collect();
@@ -59,8 +61,10 @@ class GetDepartment extends Component
     public function render()
     {
         // dd($this->departments_id);
-
+        $this->users = User::where('role', 'Student')
+                            ->where('status', 'Approved')->get();
         $this->departments = Department::All();
+        
         // $subdepartments = SubDepartment::paginate(10);
         return view('livewire.get-department');
         // $subdepartments = SubDepartment::with('department')->paginate(10);
@@ -89,7 +93,18 @@ class GetDepartment extends Component
         ]);
 
         if($thesis){
-            return redirect()->route('student.list-thesis')->with('success_thesis', 'Thesis Submitted Successfully');
+
+            $user_status = Auth::user()->role;
+
+            if($user_status == "Admin"){
+                return redirect()->route('admin.list-thesis')->with('success_thesis', 'Thesis Submitted Successfully');
+            }
+
+            elseif($user_status == "Student"){
+                return redirect()->route('student.my-list-thesis')->with('success_thesis', 'Thesis Submitted Successfully');
+            }
+
+            
         }
     }
 }

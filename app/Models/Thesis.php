@@ -38,5 +38,9 @@ class Thesis extends Model
         return $this->belongsTo(SubDepartment::class, 'sub_department_id');
     }
 
+    public function user(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     
 }

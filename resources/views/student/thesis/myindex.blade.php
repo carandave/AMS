@@ -41,7 +41,7 @@
                                 </div>
                             @endif
 
-                            @livewire('thesis-list', ['showOwnThesisList' => true])
+                            @livewire('thesis-list', ['showOwnThesisList' => true, 'currentUrl' => url()->current()])
                         </div>
                     </div>
                     

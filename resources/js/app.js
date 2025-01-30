@@ -36,6 +36,16 @@ document.addEventListener('livewire:navigated', () => { // We will reinitialize 
     initFlowbite();
 })
 
+document.addEventListener('DOMContentLoaded', function () {
+    new TomSelect('.tom-select', {
+        create: false, // Users can't create new options
+        sortField: {
+            field: "text",
+            direction: "asc"
+        }
+    });
+});
+
 
 
 

@@ -1,33 +1,59 @@
 <div>
 
-    <div class="grid grid-cols-12">
-        <div class="col-span-4 flex items-center space-x-4 ">
-          <select name="" id="" wire:model.live="status" class="font-semibold text-sm focus:border-orange-600 focus:ring-orange-500 rounded">
-            <option value="Approved">Approved</option>
-            <option value="Pending">Pending</option>
-            <option value="Denied">Denied</option>
-          </select>
+    @auth
+        @if (auth()->user()->role === "Student" && $currentUrl == url('student/my-list-thesis') || auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
+        <div class="grid grid-cols-12">
+            <div class="col-span-4 flex items-center space-x-4 ">
+              <select name="" id="" wire:model.live="status" class="font-semibold text-sm focus:border-orange-600 focus:ring-orange-500 rounded">
+                <option value="Approved">Approved</option>
+                <option value="Pending">Pending</option>
+                <option value="Denied">Denied</option>
+                <option value="Archived">Archived</option>
+              </select>
+            </div>
+            <div class="col-span-4">
+              {{-- <h3>{{ $status }}</h3> --}}
+              {{-- <h3>{{ $showStudentList }}</h3> --}}
+              
+            </div>
+            
+            <div class="col-span-4 flex items-center space-x-4 ">
+               
+            </div>
         </div>
-        <div class="col-span-4">
-          {{-- <h3>{{ $status }}</h3> --}}
-          {{-- <h3>{{ $showStudentList }}</h3> --}}
-          
-        </div>
-        
-        <div class="col-span-4 flex items-center space-x-4 ">
-           
-        </div>
-    </div>
+        {{-- @elseif (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
+        <div class="grid grid-cols-12">
+            <div class="col-span-4 flex items-center space-x-4 ">
+              <select name="" id="" wire:model.live="status" class="font-semibold text-sm focus:border-orange-600 focus:ring-orange-500 rounded">
+                <option value="Approved">Approved</option>
+                <option value="Pending">Pending</option>
+                <option value="Denied">Denied</option>
+              </select>
+            </div>
+            <div class="col-span-4">
+              
+            </div>
+            
+            <div class="col-span-4 flex items-center space-x-4 ">
+               
+            </div>
+        </div> --}}
+        @endif
+    @endauth
+    
 
     <div class="relative overflow-x-auto">
         <table class="w-full mt-3 text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
           <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
               <tr>
                 <th scope="col" class="px-6 py-3">
+                    Leader
+                </th>
+                <th scope="col" class="px-6 py-3">
                     Title
                 </th>
                 <th scope="col" class="px-6 py-3">
-                    Author
+                    Authors
                 </th>
                 <th scope="col" class="px-6 py-3">
                     Year
@@ -41,22 +67,42 @@
                 <th scope="col" class="px-6 py-3">
                     Submission Date
                 </th>
+                @if ($status === "Approved")
                 <th scope="col" class="px-6 py-3">
+                    Approved Date
+                </th>
+                @endif
+                {{-- <th scope="col" class="px-6 py-3">
                     Banner Image
-                </th>
+                </th> --}}
                 <th scope="col" class="px-6 py-3">
-                    Thesis File
+                    Thesis File 
                 </th>
+                {{-- @if (auth()->user()->role === "Admin" && $currentUrl == url('student/list-thesis'))
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
+                @endif --}}
+                @if (auth()->user()->role === "Student" && $currentUrl == url('student/my-list-thesis'))
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+                @elseif (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis') )
+                <th scope="col" class="px-6 py-3">
+                    Action
+                </th>
+                @endif
+
+                
               </tr>
           </thead>
           <tbody>
             @if ($list_thesis->isNotEmpty())
             @foreach ($list_thesis as $thesis)
               <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
-                  
+                <td class="px-6 py-4">
+                    {{ $thesis->user->last_name }}, {{ $thesis->user->first_name }} {{ $thesis->user->middlex_name }}.
+                </td>
                 <td class="px-6 py-4">
                     {{ $thesis->title }}
                 </td>
@@ -92,10 +138,15 @@
                 <td class="px-6 py-4">
                     {{ \Carbon\Carbon::parse($thesis->submission_date)->format('F j, Y') }}
                 </td>
-               
+                @if ($status === "Approved")
                 <td class="px-6 py-4">
-                    <img class="w-10 h-10 rounded-full" src="{{ url('storage/' . $thesis->photo)}}" alt="Banner Image">
+                    {{ \Carbon\Carbon::parse($thesis->approved_date)->format('F j, Y') }}
                 </td>
+                @endif
+               
+                {{-- <td class="px-6 py-4">
+                    <img class="w-10 h-10 rounded-full" src="{{ url('storage/' . $thesis->photo)}}" alt="Banner Image">
+                </td> --}}
 
                 <td class="px-6 py-4">
                     <a href="{{ url('storage/' . $thesis->file_path) }}" target="_blank" class="bg-sky-300 p-2 rounded-md text-white hover:bg-sky-600 focus:outline-1 focus:ring transition ease-in-out duration-150"><i class="bi bi-file-earmark"></i>PDF</a>
@@ -106,18 +157,79 @@
                         Edit 
                     </x-edit-modal-button>  --}}
 
+                    @if (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
+
+                    
+                        {{-- @if($status != "Archived")
+                            <x-edit-modal-button wire:click="editThesis('{{ $thesis->id }}')"
+                                x-data=""
+                                x-on:click.prevent="$dispatch('open-modal', 'edit-thesis-modal-{{ $thesis->id }}')"
+                            >{{ __('Edit') }}
+                            </x-edit-modal-button> 
+                        @endif --}}
+
+                        <x-edit-modal-button wire:click="editThesis('{{ $thesis->id }}')"
+                            x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'edit-thesis-modal-{{ $thesis->id }}')"
+                        >{{ __('Edit') }}
+                        </x-edit-modal-button> 
+
+                        @if($status == "Archived")
+                          <form wire:submit.prevent="unarchive({{ $thesis->id }})" class="ml-3">
+                            <x-archive-modal-button>Unarchived</x-archive-modal-button> 
+                          </form>
+                        @endif
+                    @endif
+
+                    @if (auth()->user()->role === "Student" && $currentUrl == url('student/my-list-thesis'))
+                    
+                    @if($thesis->status == "Approved")
+                    <x-edit-modal-button class="bg-blue-600 hover:bg-blue-900" wire:click="editThesis('{{ $thesis->id }}')"
+                        x-data=""
+                        x-on:click.prevent="$dispatch('open-modal', 'edit-thesis-modal-{{ $thesis->id }}')"
+                    >{{ __('View') }}
+                    </x-edit-modal-button> 
+                    @elseif ($thesis->status == "Pending")
                     <x-edit-modal-button wire:click="editThesis('{{ $thesis->id }}')"
                         x-data=""
                         x-on:click.prevent="$dispatch('open-modal', 'edit-thesis-modal-{{ $thesis->id }}')"
                     >{{ __('Edit') }}
                     </x-edit-modal-button> 
+                    @elseif ($thesis->status == "Denied")
+                    <x-edit-modal-button class="bg-blue-600 hover:bg-blue-900" wire:click="editThesis('{{ $thesis->id }}')"
+                        x-data=""
+                        x-on:click.prevent="$dispatch('open-modal', 'edit-thesis-modal-{{ $thesis->id }}')"
+                    >{{ __('View') }}
+                    </x-edit-modal-button> 
+                    @elseif ($thesis->status == "Archived")
+                    <x-edit-modal-button class="bg-blue-600 hover:bg-blue-900" wire:click="editThesis('{{ $thesis->id }}')"
+                        x-data=""
+                        x-on:click.prevent="$dispatch('open-modal', 'edit-thesis-modal-{{ $thesis->id }}')"
+                    >{{ __('View') }}
+                    </x-edit-modal-button> 
+                    @endif
+
+                    {{-- @if($status == "Archived")
+                        <form wire:submit.prevent="unarchive({{ $thesis->id }})" class="ml-3">
+                        <x-archive-modal-button>Unarchived</x-archive-modal-button> 
+                        </form>
+                    @endif --}}
+                    
+                    @endif
 
                     {{-- Delete if Thesis is Pending --}}
                     @if($thesis->status == "Pending")
                     <form wire:submit.prevent="delete('{{ $thesis->id }}')" class="ml-3">
                       <x-archive-modal-button>Delete</x-archive-modal-button> 
                     </form>
-                    
+                    @endif
+
+                    {{-- Archive if Thesis is Pending --}}
+                    @if (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis') && $thesis->status == "Approved")
+                    {{-- @if($thesis->status == "Approved") --}}
+                    <form wire:submit.prevent="archive('{{ $thesis->id }}')" class="ml-3">
+                      <x-archive-modal-button>Archive</x-archive-modal-button> 
+                    </form>
                     @endif
 
                     <!-- Edit Thesis Modal -->
@@ -126,7 +238,15 @@
                     <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                         <div>
                             <h3 class="text-lg font-semibold text-gray-900 dark:text-white">
+                                @if($thesis->status == "Pending" && $currentUrl == url('student/my-list-thesis') || $currentUrl == url('admin/list-thesis'))
                                 Edit Thesis
+                                @elseif($thesis->status == "Approved" && $currentUrl == url('student/my-list-thesis') || $currentUrl == url('admin/list-thesis'))
+                                View Thesis
+                                @elseif($thesis->status == "Denied" && $currentUrl == url('student/my-list-thesis') || $currentUrl == url('admin/list-thesis'))
+                                View Thesis
+                                @elseif($thesis->status == "Archived" && $currentUrl == url('student/my-list-thesis') || $currentUrl == url('admin/list-thesis'))
+                                View Thesis
+                                @endif
                             </h3>
                         </div>
 
@@ -155,10 +275,25 @@
                     <form wire:submit.prevent="update_thesis" class="m-7" >
 
                         <div class="grid grid-cols-2 mx-4 w-56 -mt-3">
-                            <div class="col-span-1">
-                                <div class="text-md font-semiboldbg-orange-100 bg-orange-100 text-orange-900 p-3 -ml-5 rounded-md">
+                            <div class="col-span-2">
+                                @if ($thesis->status == "Pending")
+                                <div class="text-md font-semibold bg-orange-100 text-orange-900 p-3 -ml-5 rounded-md">
                                     <h3 class="font-bold">Status: {{ $thesis->status }}</h3>
                                 </div>
+                                
+                                @elseif ($thesis->status == "Approved")
+                                <div class="text-md font-semibold bg-green-100 text-green-900 p-3 -ml-5 rounded-md">
+                                    <h3 class="font-bold">Status: {{ $thesis->status }}</h3>
+                                </div>
+                                @elseif ($thesis->status == "Denied")
+                                <div class="text-md font-semibold bg-red-100 text-red-900 p-3 -ml-5 rounded-md">
+                                    <h3 class="font-bold">Status: {{ $thesis->status }}</h3>
+                                </div>
+                                @elseif ($thesis->status == "Archived")
+                                <div class="text-md font-semibold bg-yellow-100 text-yellow-900 p-3 -ml-5 rounded-md">
+                                    <h3 class="font-bold">Status: {{ $thesis->status }}</h3>
+                                </div>
+                                @endif
                             </div>
                            
                         </div>
@@ -213,6 +348,23 @@
                                 <x-input-error :messages="$errors->get('year')" class="mt-2" /> 
                             </div>
                         </div>
+
+                        @auth
+                        @if (auth()->user()->role == "Admin")
+                        <div class="grid grid-cols-2 mt-3">
+                            <div class="col-span-2">
+                                <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Leader</label>
+                                <x-dropdown-input id="user_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm tom-select" wire:model="user_id" required>
+                                    <option value="">Select Leader</option> <!-- Default option -->
+                                    @foreach ($users as $user)
+                                        <option value="{{ $user->id }}">{{ $user->last_name }}, {{ $user->first_name }} {{ $user->middle_name }}.</option>
+                                    @endforeach
+                                </x-dropdown-input>
+                                <x-input-error :messages="$errors->get('user_id')" class="mt-2" /> 
+                            </div>
+                        </div>
+                        @endif
+                        @endauth
             
                         <div class="grid grid-cols-2 mt-3">
                             <div class="col-span-2">
@@ -300,17 +452,19 @@
                         </div>
                         @auth
                         @if(auth()->user()->role === 'Admin')
-                        <div class="grid grid-cols-2 mt-3">
-                            <div class="col-span-2">
-                                <label for="abstract" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Update Status {{ $old_status }}</label>
-                                <x-dropdown-input id="old_status" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model.live="old_status" :value="old('old_status')" required >
-                                    <option value="Pending">Pending</option> <!-- Default option -->
-                                    <option value="Approved">Approved</option>
-                                    <option value="Denied">Denied</option>
-                                </x-dropdown-input>
-                                <x-input-error :messages="$errors->get('old_status')" class="mt-2" /> 
-                            </div>
-                        </div>
+                            @if($status != "Archived")
+                                <div class="grid grid-cols-2 mt-3">
+                                    <div class="col-span-2">
+                                        <label for="abstract" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Update Status </label>
+                                        <x-dropdown-input id="old_status" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model.live="old_status" :value="old('old_status')" required >
+                                            <option value="Pending">Pending</option> <!-- Default option -->
+                                            <option value="Approved">Approved</option>
+                                            <option value="Denied">Denied</option>
+                                        </x-dropdown-input>
+                                        <x-input-error :messages="$errors->get('old_status')" class="mt-2" /> 
+                                    </div>
+                                </div>
+                            @endif
 
                         <div class="grid grid-cols-2 mt-3">
                             <div class="col-span-2">
@@ -321,6 +475,16 @@
                         </div> 
                         @endif
                         @endauth
+
+                        @if (auth()->user()->role === 'Student'  &&  $thesis->status == "Approved" || auth()->user()->role === 'Student'  &&  $thesis->status == "Denied" || auth()->user()->role === 'Student'  &&  $thesis->status == "Archived")
+                            <div class="grid grid-cols-2 mt-3">
+                                <div class="col-span-2">
+                                    <label for="comments" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Comments</label>
+                                    <textarea id="comments" wire:model="rejection_reason" rows="4" class="w-full bg-gray-50 block mt-1 p-2 text-sm border-gray-300 focus:border-orange-600 focus:ring-orange-500 rounded-md shadow-sm" ></textarea>
+                                    <x-input-error :messages="$errors->get('rejection_reason')" class="mt-2" /> 
+                                </div>
+                            </div> 
+                        @endif
                         
                         
 
@@ -329,6 +493,7 @@
                                 {{ __('Cancel') }}
                             </x-secondary-button>
 
+                            @if($thesis->status == "Pending" || $currentUrl == url('admin/list-thesis'))
                             <x-modal-button type="submit" class="w-40 focus:ring-10 focus:ring-orange-400 focus:outline-none ml-auto flex justify-center items-center">
                                 <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
                                 Update 
@@ -343,6 +508,7 @@
                                   </div>
                                 </div>
                               </x-modal-button>
+                              @endif
                         </div>
             
                     

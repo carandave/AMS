@@ -8,6 +8,7 @@ use App\Models\Department;
 use App\Models\SubDepartment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
+use App\Models\User;
 
 class ThesisList extends Component
 {
@@ -25,6 +26,8 @@ class ThesisList extends Component
     public $submission_date;
     public $status = "Approved";
     public $old_status;
+    public $currentUrl;
+    public $users;
 
     protected function rules(){
         return [
@@ -64,8 +67,9 @@ class ThesisList extends Component
         $this->rejection_reason = "";
     }
 
-    public function mount($showOwnThesisList = true){
+    public function mount($showOwnThesisList = true, $currentUrl){
         $this->showOwnThesisList = $showOwnThesisList;
+        $this->currentUrl = $currentUrl;
     }
 
     public function render()
@@ -81,7 +85,11 @@ class ThesisList extends Component
             return view('livewire.thesis-list', ['list_thesis' => $list_thesis, 'departments' => $departments, 'subdepartments' => $this->subdepartments]);
         }
         else{
-            $list_thesis = Thesis::where('status', $this->status)->orderBy('id', 'desc')->paginate(10);
+
+            $this->users = User::where('role', 'Student')
+                            ->where('status', 'Approved')->get();
+
+            $list_thesis = Thesis::where('status', $this->status)->with('user')->orderBy('id', 'desc')->paginate(10);
 
             return view('livewire.thesis-list', ['list_thesis' => $list_thesis, 'departments' => $departments, 'subdepartments' => $this->subdepartments]);
         }
@@ -157,42 +165,124 @@ class ThesisList extends Component
             $filePath = $thesis->file_path;
         }
 
-        $thesis->update([
-            'title' => $validated['title'],
-            'year' => $validated['year'],
-            'author' => $validated['author'],
-            'adviser' => $validated['adviser'],
-            'keywords' => $validated['keywords'],
-            'user_id' => $validated['user_id'],
-            'departments_id' => $validated['departments_id'],
-            'sub_departments_id' => $validated['sub_departments_id'],
-            'abstract' => $validated['abstract'],
-            'photo' => $photoPath,
-            'file_path' => $filePath,
-            'status' => $this->old_status,
-            'rejection_reason' => $validated['rejection_reason'],
-        ]);
+        if($this->old_status == "Pending" || $this->old_status == "Denied"){
+            $thesis->update([
+                'title' => $validated['title'],
+                'year' => $validated['year'],
+                'author' => $validated['author'],
+                'adviser' => $validated['adviser'],
+                'keywords' => $validated['keywords'],
+                'user_id' => $validated['user_id'],
+                'departments_id' => $validated['departments_id'],
+                'sub_departments_id' => $validated['sub_departments_id'],
+                'abstract' => $validated['abstract'],
+                'photo' => $photoPath,
+                'file_path' => $filePath,
+                'status' => $this->old_status,
+                'rejection_reason' => $validated['rejection_reason'],
+            ]);
 
-        if($thesis){
-            $role = Auth::user()->role;
-
-            if($role == 'Admin'){
-                return redirect()->route('admin.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+            if($thesis){
+                $role = Auth::user()->role;
+    
+                if($role == 'Admin'){
+                    return redirect()->route('admin.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+                }
+    
+                else{
+                    return redirect()->route('student.my-list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+                }
+                
             }
-
-            else{
-                return redirect()->route('student.my-list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
-            }
-            
         }
+        else{
+            $thesis->update([
+                'title' => $validated['title'],
+                'year' => $validated['year'],
+                'author' => $validated['author'],
+                'adviser' => $validated['adviser'],
+                'keywords' => $validated['keywords'],
+                'user_id' => $validated['user_id'],
+                'departments_id' => $validated['departments_id'],
+                'sub_departments_id' => $validated['sub_departments_id'],
+                'abstract' => $validated['abstract'],
+                'photo' => $photoPath,
+                'file_path' => $filePath,
+                'status' => $this->old_status,
+                'approval_date' => now(),
+                'rejection_reason' => $validated['rejection_reason'],
+            ]);
+
+            if($thesis){
+                $role = Auth::user()->role;
+    
+                if($role == 'Admin'){
+                    return redirect()->route('admin.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+                }
+    
+                else{
+                    return redirect()->route('student.my-list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+                }
+                
+            }
+        }
+        
+
+        
         
 
     }
 
     public function delete(Thesis $thesis){
+
         $thesis->delete();
 
-        return redirect()->route('student.my-list-thesis')->with('success_deleted_thesis', 'Thesis Deleted Successfully');
+        $user_status = Auth::user()->role;
+
+        if($user_status == "Admin"){
+            return redirect()->route('admin.list-thesis')->with('success_deleted_thesis', 'Thesis Deleted Successfully');
+        }
+
+        elseif($user_status == "Student"){
+            return redirect()->route('student.my-list-thesis')->with('success_deleted_thesis', 'Thesis Deleted Successfully');
+        }
+        
+    }
+
+    public function archive($thesis_id){
+        
+        $thesis = Thesis::findOrFail($thesis_id);
+
+        $thesis->update([
+            'status' => "Archived"
+        ]);
+
+        if($thesis){
+            return redirect()->route('admin.list-thesis')->with('success_archived_thesis', 'Thesis Archived Successfully');
+        }
+
+        
+    }
+
+    public function unarchive($thesis_id){
+        
+        $thesis = Thesis::findOrFail($thesis_id);
+
+        $thesis->update([
+            'status' => "Approved"
+        ]);
+
+        if($thesis){
+            $user_status = Auth::user()->role;
+
+            if($user_status == "Admin"){
+                return redirect()->route('admin.list-thesis')->with('success_unarchived_thesis', 'Thesis Unarchived Successfully');
+            }
+
+            elseif($user_status == "Student"){
+                return redirect()->route('student.my-list-thesis')->with('success_unarchived_thesis', 'Thesis Unarchived Successfully');
+            }
+        }
     }
 
     

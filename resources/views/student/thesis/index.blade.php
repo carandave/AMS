@@ -6,8 +6,11 @@
                 <div class="p-6 text-gray-900">
                   
                     <div class="flex justify-between">
-                        <x-header-side-column>List of Thesis </x-header-side-column>
-                        <x-create-button href="{{ route('student.list-thesis.create') }}">Create Thesis</x-create-button>
+                        <x-header-side-column>List of Thesis Archived</x-header-side-column>
+                        @if (auth()->user()->role === 'Admin')
+                            <x-create-button href="{{ route('student.list-thesis.create') }}">Create Thesis</x-create-button>
+                        @endif
+                       
                     </div>
                    
                     <div class="row mt-3">
@@ -41,7 +44,7 @@
                                 </div>
                             @endif
 
-                            @livewire('thesis-list', ['showOwnThesisList' => false])
+                            @livewire('thesis-list', ['showOwnThesisList' => false, 'currentUrl' => url()->current()])
                         </div>
                     </div>
                     
