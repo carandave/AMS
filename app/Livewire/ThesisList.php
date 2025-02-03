@@ -285,5 +285,36 @@ class ThesisList extends Component
         }
     }
 
+    public function requestThesis($thesis_id){
+
+        $thesis = Thesis::with(['department', 'sub_department'])->findOrFail($thesis_id);
+        
+        $this->thesis_id = $thesis->id;
+        $this->user_id = $thesis->user_id;
+        $this->title = $thesis->title;
+        $this->year = $thesis->year;
+        $this->author = $thesis->author;
+        $this->adviser = $thesis->adviser;
+        $this->departments_id = $thesis->department_id;
+        $this->departments_name = $thesis->department->name;
+        $this->sub_departments_id = $thesis->sub_department_id;
+        $this->sub_departments_name = $thesis->sub_department->name;
+        // $this->sub_departments_name = $thesis->sub_department->name;
+        $this->subdepartments = SubDepartment::where('departments_id', $this->departments_id)->get();
+        $this->submission_date = $thesis->submission_date;
+        $this->keywords = $thesis->keywords;
+        $this->abstract = $thesis->abstract;
+        $this->oldPhoto = $thesis->photo;
+        $this->old_file_path = $thesis->file_path;
+        $this->old_status = $thesis->status;
+        $this->rejection_reason = $thesis->rejection_reason;
+
+
+        // $thesis = Thesis::findOrFail($id);
+        // // return view('livewire.edit-thesis', ['thesis' => $thesis]);
+
+        // return redirect()->route('student.list-thesis.edit', ['id' => $thesis->id]);
+    }
+
     
 }

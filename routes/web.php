@@ -131,6 +131,13 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
     Route::get('student/edit-thesis', function(){
         return view('student.thesis.edit');
     })->name('student.list-thesis.edit');
+
+
+    //Student Request Thesis List
+
+    Route::get('student/request-thesis', function(){
+        return view('student.request-thesis.index');
+    })->name('student.request-thesis');
     
     
 
