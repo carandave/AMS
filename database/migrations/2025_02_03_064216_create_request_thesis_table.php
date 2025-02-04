@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('thesis_id')->constrained()->onDelete('cascade');
-            $table->foreignId('approved_by')->constrained('users')->onDelete('cascade');
+            $table->foreignId('approved_by')->nullable()->constrained('users')->onDelete('cascade');
             $table->string('status');
             $table->text('purpose');
             $table->dateTime('approved_date')->nullable();

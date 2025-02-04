@@ -64,6 +64,7 @@
                 <th scope="col" class="px-6 py-3">
                     Status
                 </th>
+                @if (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
                 <th scope="col" class="px-6 py-3">
                     Submission Date
                 </th>
@@ -72,12 +73,15 @@
                     Approved Date
                 </th>
                 @endif
+                @endif
                 {{-- <th scope="col" class="px-6 py-3">
                     Banner Image
                 </th> --}}
+                @if (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
                 <th scope="col" class="px-6 py-3">
                     Thesis File 
                 </th>
+                @endif
                 {{-- @if (auth()->user()->role === "Admin" && $currentUrl == url('student/list-thesis'))
                 <th scope="col" class="px-6 py-3">
                     Action
@@ -87,7 +91,7 @@
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
-                @elseif (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis') )
+                @elseif (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis') || auth()->user()->role === "Student" && $currentUrl == url('student/list-thesis') )
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
@@ -135,22 +139,25 @@
                     
                 </td>
 
-                <td class="px-6 py-4">
-                    {{ \Carbon\Carbon::parse($thesis->submission_date)->format('F j, Y') }}
-                </td>
-                @if ($status === "Approved")
-                <td class="px-6 py-4">
-                    {{ \Carbon\Carbon::parse($thesis->approved_date)->format('F j, Y') }}
-                </td>
+                @if (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
+                    <td class="px-6 py-4">
+                        {{ \Carbon\Carbon::parse($thesis->submission_date)->format('F j, Y') }}
+                    </td>
+                    @if ($status === "Approved")
+                    <td class="px-6 py-4">
+                        {{ \Carbon\Carbon::parse($thesis->approved_date)->format('F j, Y') }}
+                    </td>
+                    @endif
                 @endif
                
                 {{-- <td class="px-6 py-4">
                     <img class="w-10 h-10 rounded-full" src="{{ url('storage/' . $thesis->photo)}}" alt="Banner Image">
                 </td> --}}
-
+                @if (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
                 <td class="px-6 py-4">
                     <a href="{{ url('storage/' . $thesis->file_path) }}" target="_blank" class="bg-sky-300 p-2 rounded-md text-white hover:bg-sky-600 focus:outline-1 focus:ring transition ease-in-out duration-150"><i class="bi bi-file-earmark"></i>PDF</a>
                 </td>
+                @endif
 
                 <td class="px-6 py-4 flex">
                     {{-- <x-edit-modal-button wire:click="editThesis('{{ $thesis->id }}')" class="mr-1">
@@ -181,11 +188,15 @@
                         @endif
                     @endif
 
+                    @if (auth()->user()->role === "Student" && $currentUrl == url('student/list-thesis'))
+
                     <x-edit-modal-button wire:click="requestThesis('{{ $thesis->id }}')"
                         x-data=""
                         x-on:click.prevent="$dispatch('open-modal', 'request-thesis-modal-{{ $thesis->id }}')"
                     >{{ __('Request Thesis') }}
                     </x-edit-modal-button> 
+
+                    @endif
 
                     @if (auth()->user()->role === "Student" && $currentUrl == url('student/my-list-thesis'))
                     
@@ -270,7 +281,7 @@
                       
                     </div>
                     
-                    <form wire:submit.prevent="store_thesis" class="m-7" >
+                    <form wire:submit.prevent="store_request_thesis" class="m-7" >
 
                         <div class="grid gap-6 grid-cols-2 mt-4">
                             <x-text-input id="title" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="thesis_id"/>
@@ -387,6 +398,14 @@
                             </div>
                         </div>
 
+                        <div class="grid grid-cols-2 mt-3">
+                            <div class="col-span-2">
+                                <label for="purpose" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Purpose</label>
+                                <textarea id="purpose" wire:model="purpose" rows="4" class="w-full bg-gray-50 block mt-1 p-2 text-sm border-gray-300 focus:border-orange-600 focus:ring-orange-500 rounded-md shadow-sm" required ></textarea>
+                                <x-input-error :messages="$errors->get('purpose')" class="mt-2" /> 
+                            </div>
+                        </div>
+
                         <div class="mt-6 flex justify-end">
                             <x-secondary-button wire:click="resetFields" x-on:click="$dispatch('close')">
                                 {{ __('Cancel') }}
@@ -395,7 +414,7 @@
                            
                             <x-modal-button type="submit" class="w-40 focus:ring-10 focus:ring-orange-400 focus:outline-none ml-auto flex justify-center items-center">
                                 <svg class="me-1 -ms-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 5a1 1 0 011 1v3h3a1 1 0 110 2h-3v3a1 1 0 11-2 0v-3H6a1 1 0 110-2h3V6a1 1 0 011-1z" clip-rule="evenodd"></path></svg>
-                                Request 
+                                Request
             
                                 <div wire:loading wire:target="update_thesis" >
                                   <div class="relative items-center block max-w-sm ml-2 p-1 ">

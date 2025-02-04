@@ -5,6 +5,7 @@ namespace App\Livewire;
 use Livewire\Component;
 use App\Models\Thesis;
 use App\Models\Department;
+use App\Models\RequestThesis;
 use App\Models\SubDepartment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
@@ -28,6 +29,8 @@ class ThesisList extends Component
     public $old_status;
     public $currentUrl;
     public $users;
+
+    public $purpose;
 
     protected function rules(){
         return [
@@ -314,6 +317,22 @@ class ThesisList extends Component
         // // return view('livewire.edit-thesis', ['thesis' => $thesis]);
 
         // return redirect()->route('student.list-thesis.edit', ['id' => $thesis->id]);
+    }
+
+    public function store_request_thesis(){
+
+        $user_id = Auth::user()->id;
+
+        $thesis = RequestThesis::create([
+            'user_id' => $user_id,
+            'thesis_id' => $this->thesis_id,
+            'status' => "Pending",
+            'purpose' => $this->purpose,
+        ]);
+
+        if($thesis){
+            return redirect()->route('student.request-thesis')->with('success_request', "Successfully Requested Thesis");
+        }
     }
 
     

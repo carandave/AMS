@@ -65,6 +65,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
         return view('admin.thesis.edit');
     })->name('admin.list-thesis.edit');
 
+
+    //Admin Request Thesis List
+
+    Route::get('admin/request-thesis', function(){
+        return view('admin.request-thesis.index');
+    })->name('admin.request-thesis');
+
     // Route::get('admin/users/active', function(){
     //     return view('admin.users.active');
     // })->name('admin.users.active');

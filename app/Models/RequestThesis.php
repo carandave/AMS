@@ -24,6 +24,10 @@ class RequestThesis extends Model
         return $this->belongsTo(Thesis::class, 'thesis_id');
     }
 
+    public function student(){
+        return $this->belongsTo(User::class, 'user_id');
+    }
+
     public function users(){
         return $this->belongsTo(User::class, 'approved_by');
     }
