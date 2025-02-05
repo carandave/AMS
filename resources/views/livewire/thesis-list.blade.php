@@ -2,7 +2,7 @@
 
     @auth
         @if (auth()->user()->role === "Student" && $currentUrl == url('student/my-list-thesis') || auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
-        <div class="grid grid-cols-12">
+        <div class="grid grid-cols-12 mb-3">
             <div class="col-span-4 flex items-center space-x-4 ">
               <select name="" id="" wire:model.live="status" class="font-semibold text-sm focus:border-orange-600 focus:ring-orange-500 rounded">
                 <option value="Approved">Approved</option>
@@ -12,8 +12,6 @@
               </select>
             </div>
             <div class="col-span-4">
-              {{-- <h3>{{ $status }}</h3> --}}
-              {{-- <h3>{{ $showStudentList }}</h3> --}}
               
             </div>
             
@@ -21,25 +19,45 @@
                
             </div>
         </div>
-        {{-- @elseif (auth()->user()->role === "Admin" && $currentUrl == url('admin/list-thesis'))
-        <div class="grid grid-cols-12">
-            <div class="col-span-4 flex items-center space-x-4 ">
-              <select name="" id="" wire:model.live="status" class="font-semibold text-sm focus:border-orange-600 focus:ring-orange-500 rounded">
-                <option value="Approved">Approved</option>
-                <option value="Pending">Pending</option>
-                <option value="Denied">Denied</option>
-              </select>
-            </div>
-            <div class="col-span-4">
-              
-            </div>
-            
-            <div class="col-span-4 flex items-center space-x-4 ">
-               
-            </div>
-        </div> --}}
         @endif
     @endauth
+
+    <div class="grid grid-cols-12">
+        <div class="col-span-4 flex items-center space-x-4 ">
+          {{-- <select name="" id="" wire:model.live="status" class="font-semibold text-sm focus:border-orange-600 focus:ring-orange-500 rounded">
+            <option value="Approved">Approved</option>
+            <option value="Pending">Pending</option>
+            <option value="Denied">Denied</option>
+            <option value="Archived">Archived</option>
+          </select> --}}
+          <h3>Filter: </h3>
+          <x-dropdown-input id="department_name" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model.live="department_name" >
+            <option value="">Select Department</option>
+            @foreach ($departments as $department)
+                <option value="{{ $department->id }}">{{ $department->name }}</option>
+            @endforeach
+        </x-dropdown-input>
+
+        <x-dropdown-input id="year_published" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model.live="year_published" >
+            <option value="">Year Published</option>
+            @for ($year = 2000; $year <= 2030; $year++)
+                <option value="{{ $year }}">{{ $year }}</option>
+            @endfor
+        </x-dropdown-input>
+        </div>
+        <div class="col-span-4">
+          
+        </div>
+        
+        <div class="col-span-4 flex items-center space-x-4 ">
+            <input 
+                type="text" 
+                wire:model.live="search" 
+                placeholder="Search Thesis or Keywords" 
+                class="border rounded p-2 w-96 text-sm focus:border-orange-600 focus:ring-orange-500 "
+            />
+        </div>
+    </div>
     
 
     <div class="relative overflow-x-auto">

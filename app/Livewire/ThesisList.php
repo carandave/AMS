@@ -32,6 +32,13 @@ class ThesisList extends Component
 
     public $purpose;
 
+    // for filter data
+    public $department_name;
+    public $year_published;
+    public $search;
+
+
+
     protected function rules(){
         return [
             'title' => 'required',
@@ -92,7 +99,22 @@ class ThesisList extends Component
             $this->users = User::where('role', 'Student')
                             ->where('status', 'Approved')->get();
 
-            $list_thesis = Thesis::where('status', $this->status)->with('user')->orderBy('id', 'desc')->paginate(10);
+            $list_thesis = Thesis::where('status', $this->status)
+                                   ->when($this->department_name, function($query){
+                                        return $query->where('department_id', $this->department_name);
+                                    })
+                                    ->when($this->year_published, function($query){
+                                        return $query->where('year', $this->year_published);
+                                    })
+                                    ->when($this->search, function($query){
+                                        return $query->where(function ($q){ 
+                                            $q->where('title', 'like', '%' . $this->search . '%')
+                                              ->orWhere('keywords', 'like', '%' . $this->search . '%');
+                                        });
+                                    })
+                                    ->with('user')
+                                    ->orderBy('id', 'desc')
+                                    ->paginate(10);
 
             return view('livewire.thesis-list', ['list_thesis' => $list_thesis, 'departments' => $departments, 'subdepartments' => $this->subdepartments]);
         }

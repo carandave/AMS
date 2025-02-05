@@ -87,7 +87,7 @@ class GetDepartment extends Component
             'sub_department_id' => $validated['sub_departments_id'],
             'submission_date' => now(),
             'abstract' => $validated['abstract'],
-            'status' => "Pending",
+            'status' => "Approved",
             'photo' => $validated['photo']->store('public'),
             'file_path' => $validated['file_path']->store('public'),
         ]);
