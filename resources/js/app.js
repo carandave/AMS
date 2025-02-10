@@ -28,23 +28,53 @@ Livewire.hook('message.processed', () => {
 document.addEventListener('livewire:load', () => {
     // Initialize Flowbite when Livewire first loads
     initFlowbite();
+
+    
+
+
+    // var options = {
+    //     chart: {type: "bar", height: 350},
+    //     series: [{name: "Thesis Uploads", data: @json(array_values($thesisData))}],
+    //     xaxis: {categories: @json(array_keys($thesisData)), title: {text: "Month"}},
+    //     yaxis: {title: {text: "Number of Thesis"}},
+    //     colors: ["#008FFB"]
+    
+    // }
+    // alert("Qwe")
+    // var chart = new ApexCharts(document.querySelector('#thesisChart'), options);
+    // chart.render();
+    
+    // Livewire.on('refreshChart', function (data){
+    //     chart.updateSeries([{data: data}]);
+    // })
 });
 
 
-document.addEventListener('livewire:navigated', () => { // We will reinitialize the Flowbite if the DOM is change in livewire in order to work properly the modal or components of flowbite
-    // console.log('navigated');
-    initFlowbite();
-})
 
-document.addEventListener('DOMContentLoaded', function () {
-    new TomSelect('.tom-select', {
-        create: false, // Users can't create new options
-        sortField: {
-            field: "text",
-            direction: "asc"
-        }
-    });
-});
+// document.addEventListener('DOMContentLoaded', function () {
+//     new TomSelect('.tom-select', {
+//         create: false, // Users can't create new options
+//         sortField: {
+//             field: "text",
+//             direction: "asc"
+//         }
+//     });
+
+    
+// });
+
+
+
+
+
+// Ensure thesisChartData is available
+
+
+
+
+
+
+
 
 
 

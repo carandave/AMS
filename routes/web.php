@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ThesisController;
+use App\Http\Controllers\DashboardController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -71,6 +72,20 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('admin/request-thesis', function(){
         return view('admin.request-thesis.index');
     })->name('admin.request-thesis');
+
+
+
+    // Reports Route
+
+    Route::get('admin/reports/requested_thesis_reports', function(){
+        return view('admin.reports.requested_thesis_reports.index');
+    })->name('admin.reports.requested_thesis_reports');
+
+    Route::get('admin/reports/uploaded_thesis_reports', function(){
+        return view('admin.reports.uploaded_thesis_reports.index');
+    })->name('admin.reports.uploaded_thesis_reports');
+
+
 
     // Route::get('admin/users/active', function(){
     //     return view('admin.users.active');

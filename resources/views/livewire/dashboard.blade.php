@@ -29,4 +29,151 @@
             </a>
         </div>
     </div>
+
+    <div class="grid grid-cols-2 gap-4 mt-5">
+
+        
+
+        <div class="col-span-1">
+            <h2 class="text-lg font-bold">Graph Thesis Uploads</h2>
+
+            <!-- Year Filter Dropdown -->
+            {{-- <select wire:model.defer="selectedYear" class="form-select mb-4">
+                @for ($year = now()->year; $year >= 2020; $year--)
+                    <option value="{{ $year }}">{{ $year }}</option>
+                @endfor
+            </select> --}}
+
+            <!-- Chart Container -->
+            <div id="thesisChart"></div>
+
+            
+            
+        </div>
+
+        <div class="col-span-1">
+
+            <div id="requestThesisChart"></div>
+
+        </div>
+    </div>
+
+    <script>
+        function renderThesisChart() {
+            // Hanapin ang chart container
+            var chartContainer = document.querySelector("#thesisChart");
+    
+            // Siguraduhin na may container bago mag-render
+            if (!chartContainer) return;
+    
+            // Check kung may existing chart at i-destroy ito
+            if (window.thesisChartInstance) {
+                window.thesisChartInstance.destroy();
+            }
+    
+            var options = {
+                chart: {
+                    type: 'bar',
+                    height: 400
+                },
+                series: [{
+                    name: 'Thesis Uploaded',
+                    data: @json(array_values($chartData))
+                }],
+                xaxis: {
+                    categories: @json(array_keys($chartData)),
+                    title: {
+                        text: 'Year'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Number of Upload Thesis'
+                    }
+                }
+            };
+    
+            // Render new chart
+            window.thesisChartInstance = new ApexCharts(chartContainer, options);
+            window.thesisChartInstance.render();
+        }
+    
+        document.addEventListener('DOMContentLoaded', function () {
+            renderThesisChart(); // Initial render kapag nag-load ang page
+        });
+    
+        document.addEventListener('livewire:navigated', function () {
+            renderThesisChart(); // Render ulit kapag bumalik sa page
+        });
+
+
+
+
+        function renderRequestThesisChart() {
+            // Hanapin ang chart container
+            var chartContainer2 = document.querySelector("#requestThesisChart");
+
+            // Siguraduhin na may container bago mag-render
+            if (!chartContainer2) return;
+
+            // Check kung may existing chart at i-destroy ito
+            if (window.requestThesisChartInstance) {
+                window.requestThesisChartInstance.destroy();
+            }
+
+            var options = {
+                chart: {
+                    type: 'line',
+                    height: 400
+                },
+                series: [{
+                    name: 'Thesis Requested',
+                    data: @json(array_values($chartDataRequest))
+                }],
+                xaxis: {
+                    categories: @json(array_keys($chartDataRequest)),
+                    title: {
+                        text: 'Year'
+                    }
+                },
+                yaxis: {
+                    title: {
+                        text: 'Number of Approved Request Download Thesis'
+                    }
+                },
+                stroke: {
+                    curve: 'smooth',
+                    width: 3,
+                    colors: ['#28A745'] // Green Line
+                },
+                colors: ['#28A745'], // Ensures that all elements follow green color
+                markers: {
+                    size: 5,
+                    colors: ['#28A745'], // Green dot points
+                    strokeColors: '#000000', // Black border for contrast
+                    strokeWidth: 2
+                }
+                
+            };
+
+            // Render new chart
+            window.requestThesisChartInstance = new ApexCharts(chartContainer2, options);
+            window.requestThesisChartInstance.render();
+        }
+
+        // Initial render kapag nag-load ang page
+        document.addEventListener('DOMContentLoaded', function () {
+            renderRequestThesisChart();
+        });
+
+        // Render ulit kapag bumalik sa page
+        document.addEventListener('livewire:navigated', function () {
+            renderRequestThesisChart();
+        });
+
+        
+    </script>
 </div>
+
+
+

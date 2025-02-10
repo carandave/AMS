@@ -55,4 +55,22 @@
         </ul>
     @endif
 
+
+    @if($hasDropdown && collect($dropdownActiveRoutes)->intersect(['admin/reports/requested_thesis_reports', 'admin/reports/updated_thesis_reports'])->isNotEmpty())
+        <ul x-show="open" x-cloak class="mt-1 ml-7 space-y-1">
+            <li class="flex flex-col ">
+                <a wire:navigate href="{{ route('admin.reports.requested_thesis_reports') }}" 
+                class="{{ request()->is('admin/reports/requested_thesis_reports') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                    Requested Thesis Reports
+                </a>
+            </li>
+            <li class="flex flex-col mb-1">
+                <a wire:navigate href="{{ route('admin.reports.uploaded_thesis_reports') }}" 
+                class="{{ request()->is('admin/reports/uploaded_thesis_reports') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                    Uploaded Thesis Reports
+                </a>
+            </li>
+        </ul>
+    @endif
+
 </li>
