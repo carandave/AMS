@@ -86,6 +86,11 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     })->name('admin.reports.uploaded_thesis_reports');
 
 
+    // Audit Trail List
+    Route::get('admin/audit_trail', function(){
+        return view('admin.audit_trail.index');
+    })->name('admin.audit_trail');
+
 
     // Route::get('admin/users/active', function(){
     //     return view('admin.users.active');

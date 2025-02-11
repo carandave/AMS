@@ -23,6 +23,8 @@ class RequestThesisList extends Component
     public $id;
     public $title, $purpose, $old_status;
     public $list_thesis;
+
+    public $search;
     
 
     public function editRequestThesis($thesis_id){
@@ -54,13 +56,30 @@ class RequestThesisList extends Component
             $user_id = Auth::user()->id;
             $this->request_thesis = RequestThesis::where('user_id', $user_id)
                                                    ->where('status', $this->status)
+                                                   ->when($this->search, function ($query) {
+                                                        return $query->whereHas('thesis', function ($q) {
+                                                            $q->where('title', 'like', '%' . $this->search . '%');
+                                                        });
+                                                    })
                                                    ->with('thesis')->with('student')->get();
         }
         else{
             $this->users = User::where('role', 'Student')
                                ->where('status', 'Approved')
                                 ->get();
-            $this->request_thesis = RequestThesis::where('status', $this->status)->with('thesis')->with('users')->get();
+
+            $this->request_thesis = RequestThesis::where('status', $this->status)
+                                    ->when($this->search, function ($query) {
+                                        return $query->whereHas('student', function ($q) {
+                                            $q->where('first_name', 'like', '%' . $this->search . '%')
+                                            ->orWhere('middle_name', 'like', '%' . $this->search . '%')
+                                            ->orWhere('last_name', 'like', '%' . $this->search . '%');
+                                        });
+                                    })
+                                    ->with('thesis')
+                                    ->with('users')
+                                    ->get();
+                            
         }
 
         $this->list_thesis = Thesis::where('status', 'Approved')->get();

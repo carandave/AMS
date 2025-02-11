@@ -13,7 +13,23 @@
         </div>
         
         <div class="col-span-4 flex items-center space-x-4 ">
-            
+            @if (auth()->user()->role == "Admin")
+            <input 
+                type="text" 
+                wire:model.live="search" 
+                placeholder="Search Requested By" 
+                class="border rounded p-2 w-96 text-sm focus:border-orange-600 focus:ring-orange-500 "
+            />
+            @endif
+
+            @if (auth()->user()->role == "Student")
+            <input 
+                type="text" 
+                wire:model.live="search" 
+                placeholder="Search Title" 
+                class="border rounded p-2 w-96 text-sm focus:border-orange-600 focus:ring-orange-500 "
+            />
+            @endif
         </div>
     </div>
 

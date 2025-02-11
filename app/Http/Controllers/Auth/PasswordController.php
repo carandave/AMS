@@ -7,6 +7,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules\Password;
+use App\Models\AuditTrail;
+use Illuminate\Support\Facades\Auth;
 
 class PasswordController extends Controller
 {
@@ -20,10 +22,21 @@ class PasswordController extends Controller
             'password' => ['required', Password::defaults(), 'confirmed'],
         ]);
 
-        $request->user()->update([
+        $user = $request->user();
+        
+        $user->update([
             'password' => Hash::make($validated['password']),
         ]);
 
-        return back()->with('status', 'password-updated');
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Update Password",
+            'table_name' => "Users",
+            'record_id' => $user->id,
+        ]);
+
+        return back()->with('success_update_password', 'Successfully Updated Password');
+
+        
     }
 }

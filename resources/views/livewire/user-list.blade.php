@@ -18,6 +18,8 @@
       <div class="col-span-4">
         {{-- <h3>{{ $status }}</h3> --}}
         {{-- <h3>{{ $showStudentList }}</h3> --}}
+
+        
         
       </div>
       

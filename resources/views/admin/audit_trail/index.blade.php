@@ -6,23 +6,17 @@
                 <div class="p-6 text-gray-900">
                     
                     <div class="flex justify-between">
-                        <x-header-side-column>Student List </x-header-side-column>
+                        <x-header-side-column>Audit Trail</x-header-side-column>
 
-                        <x-modal-button data-modal-toggle="create_student" data-modal-target="create_student" data-bs-backdrop="false">Create Student</x-modal-button>
-                        
-                        
                     </div>
                     
                    
                     <div class="row mt-3 ">
                         <div class="col-md-12 ">
-                            @livewire('user-list', ['showStudentList' => true])
-
+                            @livewire('audit')
                             
                         </div>
                     </div>
-
-
                     
                 </div>
             </div>
