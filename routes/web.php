@@ -103,13 +103,51 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
 
 Route::middleware(['auth', 'role:Faculty'])->group(function () {
 
-    Route::get('faculty/profile', [ProfileController::class, 'edit'])->name('faculty.profile.edit');
+    Route::get('faculty/profile', [ProfileController::class, 'editFaculty'])->name('faculty.profile.edit');
     Route::patch('faculty/profile', [ProfileController::class, 'update'])->name('faculty.profile.update');
     Route::delete('faculty/profile', [ProfileController::class, 'destroy'])->name('faculty.profile.destroy');
 
     Route::get('faculty/dashboard', function(){
         return view('faculty.dashboard');
     })->name('faculty.dashboard');
+
+    // Users Menu Route
+    Route::get('faculty/users/student', function(){
+        return view('faculty.users.student.index');
+    })->name('faculty.users.student');
+
+    Route::get('faculty/users/admin', function(){
+        return view('faculty.users.admin.index');
+    })->name('faculty.users.admin');
+
+
+    //Faculty Request Thesis List
+
+    Route::get('faculty/request-thesis', function(){
+        return view('faculty.request-thesis.index');
+    })->name('faculty.request-thesis');
+
+
+    // Admin List of Thesis
+    Route::get('faculty/my-list-thesis', function(){
+        return view('faculty.thesis.myindex');
+    })->name('faculty.my-list-thesis');
+
+    Route::get('faculty/list-thesis', function(){
+        return view('faculty.thesis.index');
+    })->name('faculty.list-thesis');
+
+    Route::get('faculty/create-thesis', function(){
+        return view('faculty.thesis.create');
+    })->name('faculty.list-thesis.create');
+
+    Route::get('faculty/edit-thesis', function(){
+        return view('faculty.thesis.edit');
+    })->name('faculty.list-thesis.edit');
+
+    
+
+    
 
     // Route::get('faculty/profile', [ProfileController::class, 'edit'])->name('faculty.profile.edit');
     // Route::patch('faculty/profile', [ProfileController::class, 'update'])->name('faculty.profile.update');
@@ -130,7 +168,7 @@ Route::middleware(['auth', 'role:Faculty'])->group(function () {
 });
 
 Route::middleware(['auth', 'role:Student'])->group(function () {
-    Route::get('student/profile', [ProfileController::class, 'edit'])->name('student.profile.edit');
+    Route::get('student/profile', [ProfileController::class, 'editStudent'])->name('student.profile.edit');
     Route::patch('student/profile', [ProfileController::class, 'update'])->name('student.profile.update');
     Route::delete('student/profile', [ProfileController::class, 'destroy'])->name('student.profile.destroy');
 

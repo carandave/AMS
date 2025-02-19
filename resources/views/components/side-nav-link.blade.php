@@ -38,6 +38,23 @@
         </ul>
     @endif
 
+    @if($hasDropdown && collect($dropdownActiveRoutes)->intersect(['faculty/users/student', 'faculty/users/admin'])->isNotEmpty())
+        <ul x-show="open" x-cloak class="mt-1 ml-7 space-y-1">
+            <li class="flex flex-col ">
+                <a wire:navigate href="{{ route('faculty.users.student') }}" 
+                class="{{ request()->is('faculty/users/student') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                    Student List
+                </a>
+            </li>
+            <li class="flex flex-col mb-1">
+                <a wire:navigate href="{{ route('faculty.users.admin') }}" 
+                class="{{ request()->is('faculty/users/admin') ? 'text-gray-100 bg-gray-700 ' : 'text-gray-400' }} text-sm p-2 hover:text-gray-100 transition-colors duration-200 rounded">
+                    Official List
+                </a>
+            </li>
+        </ul>
+    @endif
+
     @if($hasDropdown && collect($dropdownActiveRoutes)->intersect(['admin/department/course', 'admin/department/major'])->isNotEmpty())
         <ul x-show="open" x-cloak class="mt-1 ml-7 space-y-1">
             <li class="flex flex-col ">

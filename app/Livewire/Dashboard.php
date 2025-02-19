@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Log;
 use App\Models\RequestThesis;
 use App\Models\Thesis;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 use Livewire\Component;
 use Illuminate\Support\Facades\DB;
 
@@ -18,6 +19,10 @@ class Dashboard extends Component
     public $totalApprovedThesisRequest;
     public $totalDeniedThesisRequest;
 
+    public $myTotalPendingThesisRequest;
+    public $myTotalApprovedThesisRequest;
+    public $myTotalDeniedThesisRequest;
+
     public $chartData = [];
     public $chartDataRequest = [];
 
@@ -26,7 +31,21 @@ class Dashboard extends Component
         $this->totalThesisUploaded = Thesis::where('status', 'Approved')->count();
         $this->totalPendingThesisRequest = RequestThesis::where('status', 'Pending')->count();
         $this->totalApprovedThesisRequest = RequestThesis::where('status', 'Approved')->count();
-        $this->totalDeniedThesisRequest = RequestThesis::where('status', 'Pending')->count();
+        $this->totalDeniedThesisRequest = RequestThesis::where('status', 'Denied')->count();
+
+        $user = Auth::user();
+
+        $this->myTotalPendingThesisRequest = RequestThesis::where('status', 'Pending')
+                                                           ->where('user_id', $user->id)
+                                                           ->count();
+
+        $this->myTotalApprovedThesisRequest = RequestThesis::where('status', 'Approved')
+                                                           ->where('user_id', $user->id)
+                                                           ->count();
+
+        $this->myTotalDeniedThesisRequest = RequestThesis::where('status', 'Denied')
+                                                           ->where('user_id', $user->id)
+                                                           ->count();
         
         // Fix query processing
         $data = DB::table('theses')

@@ -13,7 +13,7 @@
         </div>
         
         <div class="col-span-4 flex items-center space-x-4 ">
-            @if (auth()->user()->role == "Admin")
+            @if (auth()->user()->role == "Admin" || auth()->user()->role == "Faculty")
             <input 
                 type="text" 
                 wire:model.live="search" 
@@ -64,7 +64,7 @@
                 </th>
                 @endif
 
-                @if (auth()->user()->role == "Admin")
+                @if (auth()->user()->role == "Admin" || auth()->user()->role == "Faculty")
                 <th scope="col" class="px-6 py-3">
                     Action
                 </th>
@@ -116,7 +116,7 @@
                     <a href="{{ url('storage/' . $thesis->thesis->file_path) }}" target="_blank" class="bg-sky-300 p-2 rounded-md text-white hover:bg-sky-600 focus:outline-1 focus:ring transition ease-in-out duration-150"><i class="bi bi-file-earmark"></i>Download PDF</a>
                     @endif
 
-                    @if (auth()->user()->role == "Admin")
+                    @if (auth()->user()->role == "Admin" || auth()->user()->role == "Faculty")
                     <x-edit-modal-button wire:click="editRequestThesis('{{ $thesis->id }}')"
                         x-data=""
                         x-on:click.prevent="$dispatch('open-modal', 'edit-request-thesis-modal-{{ $thesis->id }}')"

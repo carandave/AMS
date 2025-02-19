@@ -100,6 +100,10 @@ class GetDepartment extends Component
                 return redirect()->route('admin.list-thesis')->with('success_thesis', 'Thesis Submitted Successfully');
             }
 
+            elseif($user_status == "Faculty"){
+                return redirect()->route('faculty.list-thesis')->with('success_thesis', 'Thesis Submitted Successfully');
+            }
+
             elseif($user_status == "Student"){
                 return redirect()->route('student.my-list-thesis')->with('success_thesis', 'Thesis Submitted Successfully');
             }

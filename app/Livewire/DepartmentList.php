@@ -8,6 +8,8 @@ use App\Models\SubDepartment;
 use Illuminate\Auth\Events\Validated;
 use Livewire\WithPagination;
 use Livewire\WithoutUrlPagination;
+use App\Models\AuditTrail;
+use Illuminate\Support\Facades\Auth;
 
 use function Livewire\store;
 
@@ -89,6 +91,13 @@ class DepartmentList extends Component
             'name' => $validated['name']]
         );
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Create New Course",
+            'table_name' => "Departments",
+            'record_id' => $departments->id,
+        ]);
+
         if($departments){
             return redirect()->route('admin.department.course')->with('success_course', 'Course Created Successfully');
         }
@@ -102,6 +111,13 @@ class DepartmentList extends Component
             'departments_id' => $validated['departments_id'], 
             'name' => $validated['name']
             ]);
+
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Create New Major",
+            'table_name' => "Sub Departments",
+            'record_id' => $sub_departments->id,
+        ]);
 
         if($sub_departments){
             return redirect()->route('admin.department.major')->with('success_major', 'Major Created Successfully');
@@ -135,6 +151,13 @@ class DepartmentList extends Component
             'name' => $validated['name']
         ]);
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Update Course",
+            'table_name' => "Departments",
+            'record_id' => $department->id,
+        ]);
+
         if($department){
             return redirect()->route('admin.department.course')->with('success_edit_course', 'Course Updated Successfully');
         }
@@ -156,6 +179,13 @@ class DepartmentList extends Component
             'name' => $validated['name']
         ]);
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Update Major",
+            'table_name' => "Sub Departments",
+            'record_id' => $sub_department->id,
+        ]);
+
         if($sub_department){
             return redirect()->route('admin.department.major')->with('success_edit_major', 'Major Updated Successfully');
         }
@@ -167,13 +197,27 @@ class DepartmentList extends Component
     public function archiveCourse($courseId){
         $course = Department::findOrFail($courseId);
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Delete Course",
+            'table_name' => "Departments",
+            'record_id' => $course->id,
+        ]);
+
         if($course->delete()){
-            return redirect()->route('admin.department.major')->with('success_archive_course', 'Course Successfully Deleted');
+            return redirect()->route('admin.department.course')->with('success_archive_course', 'Course Successfully Deleted');
         }
     }
 
     public function archiveMajor($majorId){
         $major = SubDepartment::findOrFail($majorId);
+
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Delete Major",
+            'table_name' => "Sub Departments",
+            'record_id' => $major->id,
+        ]);
 
         if($major->delete()){
             return redirect()->route('admin.department.major')->with('success_archive_major', 'Major Successfully Deleted');

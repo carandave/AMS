@@ -27,6 +27,20 @@ class ProfileController extends Controller
         ]);
     }
 
+    public function editFaculty(Request $request): View
+    {
+        return view('faculty.profile.edit', [
+            'user' => $request->user(),
+        ]);
+    }
+
+    public function editStudent(Request $request): View
+    {
+        return view('student.profile.edit', [
+            'user' => $request->user(),
+        ]);
+    }
+
     /**
      * Update the user's profile information.
      */
@@ -59,6 +73,9 @@ class ProfileController extends Controller
         // $request->user()->save();
 
         // Save user data
+
+
+
         $user->save();
 
         AuditTrail::create([
@@ -68,7 +85,21 @@ class ProfileController extends Controller
             'record_id' => $user->id,
         ]);
 
-        return Redirect::route('admin.profile.edit')->with('success_update_profile', 'Successfully Updated Profile Information');
+        if($user->role == "Admin"){
+            return Redirect::route('admin.profile.edit')->with('success_update_profile', 'Successfully Updated Profile Information');
+        }
+
+        elseif($user->role == "Faculty"){
+            return Redirect::route('faculty.profile.edit')->with('success_update_profile', 'Successfully Updated Profile Information');
+        }
+
+        elseif($user->role == "Student"){
+            return Redirect::route('student.profile.edit')->with('success_update_profile', 'Successfully Updated Profile Information');
+        }
+
+        
+
+        
     }
 
     /**

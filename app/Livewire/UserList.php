@@ -11,6 +11,8 @@ use Illuminate\Support\Str;
 use Livewire\WithFileUploads;
 use App\Mail\ApprovedRegistrationEmail;
 use Illuminate\Support\Facades\Mail;
+use App\Models\AuditTrail;
+use Illuminate\Support\Facades\Auth;
 
 use Carbon\Carbon;
 
@@ -172,6 +174,13 @@ class UserList extends Component
             }
         }
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Update Student",
+            'table_name' => "Users",
+            'record_id' => $user->id,
+        ]);
+
         return redirect()->route('admin.users.student')->with('success_edit_student', 'Student Updated Successfully');
         
     }
@@ -203,6 +212,13 @@ class UserList extends Component
             'photo' => $photoPath
         ]);
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Update Official",
+            'table_name' => "Users",
+            'record_id' => $user->id,
+        ]);
+
         return redirect()->route('admin.users.admin')->with('success_edit_official', 'Official Updated Successfully');
         
         
@@ -232,6 +248,13 @@ class UserList extends Component
             'email' =>  $validated['email'],
             'password' => Hash::make($newPassword),
             'photo' => $validated['photo']->store('public'),
+        ]);
+
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Create New Student",
+            'table_name' => "Users",
+            'record_id' => $user->id,
         ]);
 
         $status = "New Account";
@@ -269,6 +292,13 @@ class UserList extends Component
             'email' =>  $validated['email'],
             'password' => Hash::make($newPassword),
             'photo' => $validated['photo']->store('public'),
+        ]);
+
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Create New Official",
+            'table_name' => "Users",
+            'record_id' => $user->id,
         ]);
 
         $status = "New Account";
@@ -366,6 +396,13 @@ class UserList extends Component
             $user->update([
                 'status' => 'Approved'
             ]);
+
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Unarchive Student",
+                'table_name' => "Users",
+                'record_id' => $user->id,
+            ]);
     
             return redirect()->route('admin.users.student')->with('success_archive_student', 'Student Successfully Unarchived');
             }
@@ -374,15 +411,31 @@ class UserList extends Component
                 $user->update([
                     'status' => 'Archived'
                 ]);
+
+                AuditTrail::create([
+                    'user_id' => Auth::id(),
+                    'action' => "Archive Student",
+                    'table_name' => "Users",
+                    'record_id' => $user->id,
+                ]);
         
                 return redirect()->route('admin.users.student')->with('success_archive_student', 'Student Successfully Archived');
             }
+
+            
         }
 
         else{
             if($user->status == "Archived"){
                 $user->update([
                     'status' => 'Approved'
+                ]);
+
+                AuditTrail::create([
+                    'user_id' => Auth::id(),
+                    'action' => "Unarchive Official",
+                    'table_name' => "Users",
+                    'record_id' => $user->id,
                 ]);
         
                 return redirect()->route('admin.users.admin')->with('success_archive_official', 'Official Successfully Unarchived');
@@ -393,7 +446,12 @@ class UserList extends Component
                     'status' => 'Archived'
                 ]);
 
-                
+                AuditTrail::create([
+                    'user_id' => Auth::id(),
+                    'action' => "Archive Official",
+                    'table_name' => "Users",
+                    'record_id' => $user->id,
+                ]);
         
                 return redirect()->route('admin.users.admin')->with('success_archive_official', 'Official Successfully Archived');
             }

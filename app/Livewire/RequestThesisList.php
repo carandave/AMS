@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use Livewire\WithPagination;
 use App\Models\User;
 use App\Models\Thesis;
+use App\Models\AuditTrail;
+
 
 class RequestThesisList extends Component
 {
@@ -103,8 +105,23 @@ class RequestThesisList extends Component
                 'status' => $this->old_status,
             ]);
 
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Update Request Thesis",
+                'table_name' => "Request Thesis",
+                'record_id' => $thesis->id,
+            ]);
+
             if($thesis){
-                return redirect()->route('admin.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                $user_status = Auth::user()->role;
+
+                if($user_status == "Admin"){
+                    return redirect()->route('admin.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                }
+                elseif($user_status == "Faculty"){
+                    return redirect()->route('faculty.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                }
+                
             }
     
             
@@ -131,9 +148,23 @@ class RequestThesisList extends Component
                 ]);
             }
 
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Update Request Thesis",
+                'table_name' => "Request Thesis",
+                'record_id' => $thesis->id,
+            ]);
+
 
             if($thesis){
-                return redirect()->route('admin.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                $user_status = Auth::user()->role;
+
+                if($user_status == "Admin"){
+                    return redirect()->route('admin.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                }
+                elseif($user_status == "Faculty"){
+                    return redirect()->route('faculty.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                }
             }
     
             
@@ -147,12 +178,30 @@ class RequestThesisList extends Component
                 'status' => $this->old_status,
             ]);
 
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Update Request Thesis",
+                'table_name' => "Request Thesis",
+                'record_id' => $thesis->id,
+            ]);
+
             if($thesis){
-                return redirect()->route('admin.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+            
+                $user_status = Auth::user()->role;
+
+                if($user_status == "Admin"){
+                    return redirect()->route('admin.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                }
+                elseif($user_status == "Faculty"){
+                    return redirect()->route('faculty.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
+                }
+            
             }
     
             
         }
+
+        
         // $thesis = RequestThesis::findOrFail($this->id);
 
         // if($thesis){
@@ -175,6 +224,13 @@ class RequestThesisList extends Component
                 'purpose' => $this->purpose,
                 'status' => $this->old_status,
             ]);
+
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Update Request Thesis",
+                'table_name' => "Request Thesis",
+                'record_id' => $thesis->id,
+            ]);
     
             return redirect()->route('student.request-thesis')->with('success_update_thesis', 'Successfully Updated Request Thesis');
         }
@@ -186,6 +242,13 @@ class RequestThesisList extends Component
 
         if($thesis){
             $thesis->delete();
+
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Delete Request Thesis",
+                'table_name' => "Request Thesis",
+                'record_id' => $thesis->id,
+            ]);
     
             return redirect()->route('student.request-thesis')->with('success_delete_thesis', 'Successfully Deleted Request Thesis');
         }

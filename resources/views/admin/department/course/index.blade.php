@@ -8,7 +8,14 @@
                     <div class="flex justify-between">
                         <x-header-side-column>Course List </x-header-side-column>
 
-                        <x-modal-button data-modal-toggle="create_course" data-modal-target="create_course" data-bs-backdrop="false">Create Course</x-modal-button>
+                        {{-- <x-modal-button data-modal-toggle="create_course" data-modal-target="create_course" data-bs-backdrop="false">Create Course</x-modal-button> --}}
+                        
+                        <x-modal-button class="mr-1"
+                            x-data=""
+                            x-on:click.prevent="$dispatch('open-modal', 'create-course-modal')"
+                        >{{ __('Create Course') }}
+                        </x-modal-button> 
+                        
                         <!-- Inside existing Livewire component -->
 
                         {{-- <x-modal-button data-modal-target="crud-modal" data-modal-toggle="crud-modal" >Create Student</x-modal-button> --}}

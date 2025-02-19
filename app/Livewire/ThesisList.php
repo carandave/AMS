@@ -10,6 +10,7 @@ use App\Models\SubDepartment;
 use Illuminate\Support\Facades\Auth;
 use Livewire\WithFileUploads;
 use App\Models\User;
+use App\Models\AuditTrail;
 
 class ThesisList extends Component
 {
@@ -207,11 +208,22 @@ class ThesisList extends Component
                 'rejection_reason' => $validated['rejection_reason'],
             ]);
 
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Update Thesis",
+                'table_name' => "Thesis",
+                'record_id' => $thesis->id,
+            ]);
+
             if($thesis){
                 $role = Auth::user()->role;
     
                 if($role == 'Admin'){
                     return redirect()->route('admin.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+                }
+
+                elseif($role == 'Faculty'){
+                    return redirect()->route('faculty.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
                 }
     
                 else{
@@ -238,11 +250,22 @@ class ThesisList extends Component
                 'rejection_reason' => $validated['rejection_reason'],
             ]);
 
+            AuditTrail::create([
+                'user_id' => Auth::id(),
+                'action' => "Update Thesis",
+                'table_name' => "Thesis",
+                'record_id' => $thesis->id,
+            ]);
+
             if($thesis){
                 $role = Auth::user()->role;
     
                 if($role == 'Admin'){
                     return redirect()->route('admin.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
+                }
+
+                elseif($role == 'Faculty'){
+                    return redirect()->route('faculty.list-thesis')->with('success_updated_thesis', 'Thesis Updated Successfully');
                 }
     
                 else{
@@ -262,10 +285,21 @@ class ThesisList extends Component
 
         $thesis->delete();
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Delete Thesis",
+            'table_name' => "Thesis",
+            'record_id' => $thesis->id,
+        ]);
+
         $user_status = Auth::user()->role;
 
         if($user_status == "Admin"){
             return redirect()->route('admin.list-thesis')->with('success_deleted_thesis', 'Thesis Deleted Successfully');
+        }
+
+        elseif($user_status == "Faculty"){
+            return redirect()->route('faculty.list-thesis')->with('success_deleted_thesis', 'Thesis Deleted Successfully');
         }
 
         elseif($user_status == "Student"){
@@ -282,9 +316,26 @@ class ThesisList extends Component
             'status' => "Archived"
         ]);
 
-        if($thesis){
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Archive Thesis",
+            'table_name' => "Thesis",
+            'record_id' => $thesis->id,
+        ]);
+
+        $user_status = Auth::user()->role;
+
+        if($user_status == "Admin"){
             return redirect()->route('admin.list-thesis')->with('success_archived_thesis', 'Thesis Archived Successfully');
         }
+
+        elseif($user_status == "Faculty"){
+            return redirect()->route('faculty.list-thesis')->with('success_archived_thesis', 'Thesis Archived Successfully');
+        }
+
+        // if($thesis){
+        //     return redirect()->route('admin.list-thesis')->with('success_archived_thesis', 'Thesis Archived Successfully');
+        // }
 
         
     }
@@ -297,11 +348,22 @@ class ThesisList extends Component
             'status' => "Approved"
         ]);
 
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Unarchive Thesis",
+            'table_name' => "Thesis",
+            'record_id' => $thesis->id,
+        ]);
+
         if($thesis){
             $user_status = Auth::user()->role;
 
             if($user_status == "Admin"){
                 return redirect()->route('admin.list-thesis')->with('success_unarchived_thesis', 'Thesis Unarchived Successfully');
+            }
+
+            elseif($user_status == "Faculty"){
+                return redirect()->route('faculty.list-thesis')->with('success_unarchived_thesis', 'Thesis Unarchived Successfully');
             }
 
             elseif($user_status == "Student"){
@@ -350,6 +412,13 @@ class ThesisList extends Component
             'thesis_id' => $this->thesis_id,
             'status' => "Pending",
             'purpose' => $this->purpose,
+        ]);
+
+        AuditTrail::create([
+            'user_id' => Auth::id(),
+            'action' => "Create New Request Thesis",
+            'table_name' => "Thesis",
+            'record_id' => $thesis->id,
         ]);
 
         if($thesis){

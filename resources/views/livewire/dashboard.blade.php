@@ -1,5 +1,39 @@
 <div>
     {{-- Stop trying to control. --}}
+
+    @if (auth()->user()->role == "Student")
+    <div class="grid grid-cols-4 gap-4">
+        <div class="col-span-1">
+            <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
+                <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">Total Thesis Uploaded</h5>
+                <p class="text-xl font-normal text-gray-700 dark:text-gray-400">{{ $totalThesisUploaded }}</p>
+            </a>
+        </div>
+
+        <div class="col-span-1">
+            <a href="#" class="block max-w-sm p-6 bg-green-100 text-green-800 border border-gray-200 rounded-lg shadow-sm hover:bg-green-200 ">
+                <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">Approved Request Thesis</h5>
+                <p class="text-xl font-normal text-green-700 ">{{ $myTotalApprovedThesisRequest }}</p>
+            </a>
+        </div>
+
+        <div class="col-span-1">
+            <a href="#" class="block max-w-sm p-6 bg-orange-100 border border-gray-200 rounded-lg shadow-sm hover:bg-orange-300 ">
+                <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">Pending Request Thesis </h5>
+                <p class="text-xl font-normal text-orange-700 ">{{ $myTotalPendingThesisRequest }}</p>
+            </a>
+        </div>
+
+        <div class="col-span-1">
+            <a href="#" class="block max-w-sm p-6 bg-red-100 border border-gray-200 rounded-lg shadow-sm hover:bg-red-300">
+                <h5 class="mb-2 text-lg font-bold tracking-tight text-gray-900 dark:text-white">Rejected Request Thesis</h5>
+                <p class="text-xl font-normal text-red-700 ">{{ $myTotalDeniedThesisRequest }}</p>
+            </a>
+        </div>
+    </div>
+    @endif
+
+    @if (auth()->user()->role == "Admin" || auth()->user()->role == "Faculty")
     <div class="grid grid-cols-4 gap-4">
         <div class="col-span-1">
             <a href="#" class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700">
@@ -29,20 +63,16 @@
             </a>
         </div>
     </div>
+    @endif
+
+    
+    
 
     <div class="grid grid-cols-2 gap-4 mt-5">
 
-        
-
+        @if (auth()->user()->role == "Admin" || auth()->user()->role == "Faculty")
         <div class="col-span-1">
             <h2 class="text-lg font-bold">Graph Thesis Uploads</h2>
-
-            <!-- Year Filter Dropdown -->
-            {{-- <select wire:model.defer="selectedYear" class="form-select mb-4">
-                @for ($year = now()->year; $year >= 2020; $year--)
-                    <option value="{{ $year }}">{{ $year }}</option>
-                @endfor
-            </select> --}}
 
             <!-- Chart Container -->
             <div id="thesisChart"></div>
@@ -56,6 +86,7 @@
             <div id="requestThesisChart"></div>
 
         </div>
+        @endif
     </div>
 
     <script>

@@ -10,12 +10,14 @@
 
                         {{-- <x-modal-button x-data=""
                         x-on:click.prevent="$dispatch('open-modal', 'create-official-modal')">Create Official</x-modal-button> --}}
-
-                        <x-modal-button
-                            x-data=""
-                            x-on:click.prevent="$dispatch('open-modal', 'create-official-modal')"
-                        >{{ __('Create Official') }}
-                        </x-modal-button> 
+                        @if (auth()->user()->role == "Admin")
+                            <x-modal-button
+                                x-data=""
+                                x-on:click.prevent="$dispatch('open-modal', 'create-official-modal')"
+                            >{{ __('Create Official') }}
+                            </x-modal-button> 
+                        @endif
+                        
                         
                     </div>
                    
