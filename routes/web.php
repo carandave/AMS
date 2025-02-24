@@ -92,6 +92,13 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     })->name('admin.audit_trail');
 
 
+    // Announcement
+    Route::get('admin/announcement', function(){
+        return view('admin.announcement.index');
+    })->name('admin.announcement');
+
+
+
     // Route::get('admin/users/active', function(){
     //     return view('admin.users.active');
     // })->name('admin.users.active');
@@ -146,7 +153,10 @@ Route::middleware(['auth', 'role:Faculty'])->group(function () {
     })->name('faculty.list-thesis.edit');
 
     
-
+    // Announcement
+    Route::get('faculty/announcement', function(){
+        return view('faculty.announcement.index');
+    })->name('faculty.announcement');
     
 
     // Route::get('faculty/profile', [ProfileController::class, 'edit'])->name('faculty.profile.edit');
@@ -203,6 +213,11 @@ Route::middleware(['auth', 'role:Student'])->group(function () {
     Route::get('student/request-thesis', function(){
         return view('student.request-thesis.index');
     })->name('student.request-thesis');
+
+    // Announcement
+    Route::get('student/announcement', function(){
+        return view('student.announcement.index');
+    })->name('student.announcement');
     
     
 

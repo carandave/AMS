@@ -48,6 +48,7 @@
                     <x-side-nav-link icon="bi bi-building-fill" hasDropdown="true" :dropdownActiveRoutes="['admin/department/course', 'admin/department/major']">Deparment</x-side-nav-link>
                     <x-side-nav-link link="{{ route('admin.request-thesis') }}" icon="bi bi-journals" :active="request()->is('admin/request-thesis')">Requested Thesis</x-side-nav-link>
                     <x-side-nav-link link="{{ route('admin.list-thesis') }}" icon="bi bi-files-alt" :active="request()->is('admin/list-thesis')">Thesis Archive List</x-side-nav-link>
+                    <x-side-nav-link link="{{ route('admin.announcement') }}" icon="bi bi-megaphone" :active="request()->is('admin/announcement')">Announcement</x-side-nav-link>
                     <x-side-nav-link icon="bi bi-file-earmark-arrow-down" hasDropdown="true" :dropdownActiveRoutes="['admin/reports/requested_thesis_reports', 'admin/reports/uploaded_thesis_reports']">Reports</x-side-nav-link>
                     <x-side-nav-link link="{{ route('admin.audit_trail') }}" icon="bi bi-clipboard-check-fill" :active="request()->is('admin/audit_trail')">Audit Trail</x-side-nav-link>
                 @elseif(Auth::user()->role === 'Faculty')
@@ -55,11 +56,13 @@
                     <x-side-nav-link icon="bi bi-people-fill" hasDropdown="true" :dropdownActiveRoutes="['faculty/users/student', 'faculty/users/admin']">Users</x-side-nav-link>
                     <x-side-nav-link link="{{ route('faculty.request-thesis') }}" icon="bi bi-journals" :active="request()->is('faculty/request-thesis')">Requested Thesis</x-side-nav-link>
                     <x-side-nav-link link="{{ route('faculty.list-thesis') }}" icon="bi bi-files-alt" :active="request()->is('faculty/list-thesis')">Thesis Archive List</x-side-nav-link>
+                    <x-side-nav-link link="{{ route('faculty.announcement') }}" icon="bi bi-megaphone" :active="request()->is('faculty/announcement')">Announcement</x-side-nav-link>
                 @elseif(Auth::user()->role === 'Student')
                     <x-side-nav-link link="{{ route('student.dashboard') }}" icon="bi bi-house-door-fill" :active="request()->is('student/dashboard')">Dashboard</x-side-nav-link>
                     <x-side-nav-link link="{{ route('student.request-thesis') }}" icon="bi bi-journals" :active="request()->is('student/request-thesis')">Thesis Requested</x-side-nav-link>
                     {{-- <x-side-nav-link link="{{ route('student.my-list-thesis') }}" icon="bi bi-journals" :active="request()->is('student/my-list-thesis')">My Submitted Thesis</x-side-nav-link> --}}
                     <x-side-nav-link link="{{ route('student.list-thesis') }}" icon="bi bi-files-alt" :active="request()->is('student/list-thesis')">Thesis Archive List</x-side-nav-link>
+                    <x-side-nav-link link="{{ route('student.announcement') }}" icon="bi bi-megaphone" :active="request()->is('student/announcement')">Announcement</x-side-nav-link>
                 @endif
             @endauth
             

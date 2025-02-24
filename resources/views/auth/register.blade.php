@@ -1,5 +1,32 @@
 <x-guest-layout>
 
+    <div class="col-span-7 " >
+        <div class="relative bg-cover bg-center h-screen " style="background-image: url('/images/logos/LoginBg.webp');">
+            
+            <!-- Gradient Overlay -->
+            <div class="absolute inset-0 bg-gradient-to-b from-black/20 to-black/60"></div>
+
+            <div class="relative flex flex-col justify-center pt-0 p-24 h-full ">
+                <div class="mb-10">
+                    <img src="{{asset('images/logos/logo.png')}}" class="img-fluid w-28 h-28" alt="Logo po ito">
+                </div>
+
+                <div class="my-12">
+                    <h1 class="text-4xl font-bold text-orange-100">Join the Research Community, </h1>
+                    <h1 class="text-4xl font-bold text-orange-100">Create Your Account! </h1>
+                </div>
+
+                <div class="">
+                    <p class="text-md font-semi-bold text-orange-100">Access and manage a collection of archived theses and research papers.</p>
+                    <p class="text-md font-semi-bold text-orange-100">Sign up now to submit, explore, and preserve academic works</p>
+                </div>
+            </div>
+
+        </div>                   
+    </div>
+
+    <div class="col-span-5 bg-white flex justify-center items-center">
+
     @if(session('success'))
         <div class="alert alert-success mb-3">
             {{ session('success') }}
@@ -24,29 +51,46 @@
                 <x-input-error :messages="$errors->get('middle_name')" class="mt-2" />
             </div>
         </div>
+
+        <div class="grid grid-cols-1 ">
+           <!-- Middle Name -->
+           <div class="mt-4">
+               <x-input-label for="last_name" :value="__('Last Name')" />
+               <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
+               <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
+           </div>
+       </div>
+
         
         
+        
+        <div class="grid grid-cols-2 gap-4">
+            
 
-        <!-- Last Name -->
-        <div class="mt-4">
-            <x-input-label for="last_name" :value="__('Last Name')" />
-            <x-text-input id="last_name" class="block mt-1 w-full" type="text" name="last_name" :value="old('last_name')" required autofocus autocomplete="last_name" />
-            <x-input-error :messages="$errors->get('last_name')" class="mt-2" />
-        </div>
+            <div class="col-span-1">
+                <!-- Student ID -->
+                <div class="mt-4">
+                    <x-input-label for="student_id" :value="__('Student ID')" />
+                    <x-text-input id="student_id" class="block mt-1 w-full" type="text" name="student_id" :value="old('student_id')" required autofocus autocomplete="student_id" />
+                    <x-input-error :messages="$errors->get('student_id')" class="mt-2" />
+                </div>
+            </div>
 
-        <!-- Student ID -->
-        <div class="mt-4">
-            <x-input-label for="student_id" :value="__('Student ID')" />
-            <x-text-input id="student_id" class="block mt-1 w-full" type="text" name="student_id" :value="old('student_id')" required autofocus autocomplete="student_id" />
-            <x-input-error :messages="$errors->get('student_id')" class="mt-2" />
-        </div>
+            <div class="col-span-1">
+                <!-- Email Address -->
+                <div class="mt-4">
+                    <x-input-label for="email" :value="__('Email')" />
+                    <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
+                    <x-input-error :messages="$errors->get('email')" class="mt-2" />
+                </div>
+            </div>
 
-        <!-- Email Address -->
-        <div class="mt-4">
-            <x-input-label for="email" :value="__('Email')" />
-            <x-text-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required autocomplete="username" />
-            <x-input-error :messages="$errors->get('email')" class="mt-2" />
         </div>
+        
+
+        
+
+        
 
         <div class="grid grid-cols-2 gap-4">
             <!-- Password -->
@@ -80,16 +124,16 @@
             <x-input-error :messages="$errors->get('profile')" class="mt-2" />
         </div>
 
-        
-
-        <div class="flex items-center justify-end mt-4">
-            <a class="underline text-sm text-gray-600 hover:text-gray-900 rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" href="{{ route('login') }}">
-                {{ __('Already registered?') }}
-            </a>
-
-            <x-primary-button class="ms-4">
-                {{ __('Register') }}
+        <div class="flex justify-end mt-3">
+            <x-primary-button class="w-full text-center flex justify-center ">
+                <label for="" class="text-center">Register</label>
             </x-primary-button>
         </div>
+
+        <div class="mt-5">
+            <p class="text-gray-600 text-sm">Already Registered? <a href="{{ route('login') }}" class="text-orange-500 hover:text-orange-600">Sign in</a></p>
+        </div>
+
     </form>
+  </div>
 </x-guest-layout>
