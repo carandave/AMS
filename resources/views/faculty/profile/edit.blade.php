@@ -55,6 +55,8 @@
 
                                 @if ($user->role == "Admin")
                                     <h5 class="mb-1 text-lg font-medium text-gray-900 dark:text-white">{{ $user->role }}</h5>
+                                @elseif ($user->role == "Faculty")
+                                    <h5 class="mb-1 text-lg font-medium text-gray-900 dark:text-white">{{ $user->role }}</h5>
                                 @endif
 
                                 <span class="text-sm text-gray-500 dark:text-gray-400">{{ $user->email }}</span>

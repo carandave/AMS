@@ -158,10 +158,14 @@
                         
                         <form wire:submit.prevent="admin_update_request_thesis" >
                             <div class="grid gap-6 grid-cols-2 mt-4 mx-8">
-                                <x-text-input id="title" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="id"/>
+                                <x-text-input id="title" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="title"/>
+                                <x-text-input id="user_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="user_id"/>
+                                <x-text-input id="id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="id"/>
+                                <x-text-input id="email" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="hidden" wire:model="email"/>
+                                <x-text-input id="linkfile" class="bg-gray-50 block mt-1 w-full p-2 text-sm" type="text" wire:model="linkfile"/>
                                 
                                 <div class="col-span-2">
-                                    <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Requested By</label>
+                                    <label for="user_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Requested By </label>
                                     <x-dropdown-input id="user_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm tom-select" wire:model="user_id" required disabled>
                                         @foreach ($users as $user)
                                             <option value="{{ $user->id }}">{{ $user->last_name }}, {{ $user->first_name }} {{ $user->middle_name }}.</option>

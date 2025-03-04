@@ -66,6 +66,6 @@ class RegisteredUserController extends Controller
         //     return redirect()->route('student.dashboard');
         // }
 
-        return redirect('/register')->with('success', 'Your account has been successfully registered. An administrator must approve your account before you can log in.');
+        return redirect('/register')->with('success', 'We appreciate your registration! Your account is pending approval from an administrator before you can log in.');
     }
 }

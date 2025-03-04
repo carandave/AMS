@@ -9,6 +9,9 @@ use Livewire\WithPagination;
 use App\Models\User;
 use App\Models\Thesis;
 use App\Models\AuditTrail;
+use App\Mail\ApprovedRequestDownloadEmail;
+use Carbon\Carbon;
+use Illuminate\Support\Facades\Mail;
 
 
 class RequestThesisList extends Component
@@ -25,15 +28,20 @@ class RequestThesisList extends Component
     public $id;
     public $title, $purpose, $old_status;
     public $list_thesis;
+    public $email;
+    public $linkfile;
 
     public $search;
     
 
     public function editRequestThesis($thesis_id){
-        $request_thesis = RequestThesis::with(['thesis', 'users'])->findOrFail($thesis_id);
+        $request_thesis = RequestThesis::with(['thesis', 'users', 'student'])->findOrFail($thesis_id);
         $this->id = $request_thesis->id;
+        $this->email = $request_thesis->student->email;
         $this->user_id = $request_thesis->user_id;
         $this->thesis_id = $request_thesis->thesis_id;
+        $this->title = $request_thesis->thesis->title;
+        $this->linkfile = $request_thesis->thesis->file_path;
         $this->purpose = $request_thesis->purpose;
         $this->old_status = $request_thesis->status;
         
@@ -96,14 +104,19 @@ class RequestThesisList extends Component
         
         if($this->old_status == "Pending"){
 
-            
-
             $thesis = RequestThesis::findOrFail($this->id);
+
+            // $user = User::findOrFail($this->user_id);
 
             $thesis->update([
                 'purpose' => $this->purpose,
                 'status' => $this->old_status,
             ]);
+
+            // $approved_date = Carbon::parse($thesis->approved_date)->format('F j, Y');
+
+            // Mail::to($this->email)->send(new ApprovedRequestDownloadEmail($user, $thesis->title, $thesis->status, $approved_date));
+            
 
             AuditTrail::create([
                 'user_id' => Auth::id(),
@@ -111,6 +124,7 @@ class RequestThesisList extends Component
                 'table_name' => "Request Thesis",
                 'record_id' => $thesis->id,
             ]);
+            
 
             if($thesis){
                 $user_status = Auth::user()->role;
@@ -148,6 +162,9 @@ class RequestThesisList extends Component
                 ]);
             }
 
+            $user = User::findOrFail($this->user_id);
+            Mail::to($this->email)->send(new ApprovedRequestDownloadEmail($user, $this->title, $this->old_status, $this->linkfile));
+
             AuditTrail::create([
                 'user_id' => Auth::id(),
                 'action' => "Update Request Thesis",
@@ -177,6 +194,9 @@ class RequestThesisList extends Component
             $thesis->update([
                 'status' => $this->old_status,
             ]);
+
+            $user = User::findOrFail($this->user_id);
+            Mail::to($this->email)->send(new ApprovedRequestDownloadEmail($user, $this->title, $this->old_status, $this->linkfile));
 
             AuditTrail::create([
                 'user_id' => Auth::id(),

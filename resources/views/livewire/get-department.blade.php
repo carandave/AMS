@@ -118,7 +118,7 @@
                     <div class="col-span-1">
                         <label for="sub_departments_id" class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Major Name</label>
                         <x-dropdown-input id="sub_departments_id" class="bg-gray-50 block mt-1 w-full p-2 text-sm" wire:model="sub_departments_id" >
-                            <option value="">Select Major</option> <!-- Default option -->
+                            <option value="">Select Major </option> <!-- Default option -->
                             @foreach ($subdepartments as $subdepartment)
                                 <option value="{{ $subdepartment->id }}">{{ $subdepartment->name }}</option>
                             @endforeach

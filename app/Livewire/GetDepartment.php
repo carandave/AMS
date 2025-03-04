@@ -37,7 +37,7 @@ class GetDepartment extends Component
             'keywords' => 'required',
             'user_id' => 'required',
             'departments_id' => 'required',
-            'sub_departments_id' => 'nullable',
+            'sub_departments_id' => count($this->subdepartments) > 0 ? 'required' : 'nullable',
             'abstract' => 'required',
             'photo' => 'required|image|max:1024',
             'file_path' => 'required|file|mimes:pdf',

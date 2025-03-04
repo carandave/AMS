@@ -91,11 +91,9 @@
               <td class="px-6 py-4">
                   {{ $thesis->student->first_name }} {{ $thesis->student->last_name }}
               </td>
-
               <td class="px-6 py-4">
                 {{ \Carbon\Carbon::parse($thesis->submission_date)->format('F j, Y') }}
               </td>
-
               <td class="px-6 py-4">
                   {{ $thesis->thesis->title }}
               </td>
@@ -187,19 +185,14 @@
                 <td class="px-6 py-4">
                     {{ $thesis->year }}
                 </td>
-
+                
                 <td class="px-6 py-4">
                     {{ $thesis->department->name }}
                 </td>
-
-                <td class="px-6 py-4">
-                    @if($thesis->sub_department->name)
-                        {{ $thesis->sub_department->name }}
-                    @else
-                        N/A
-                    @endif
-                </td>
                 
+                <td class="px-6 py-4">
+                    {{ $thesis->sub_department->name ?? 'N/A' }}
+                </td>
 
                 <td class="px-6 py-4">
                     {{ $thesis->adviser }}

@@ -149,7 +149,7 @@ class ThesisList extends Component
         $this->departments_id = $thesis->department_id;
         $this->departments_name = $thesis->department->name;
         $this->sub_departments_id = $thesis->sub_department_id;
-        $this->sub_departments_name = $thesis->sub_department->name;
+        $this->sub_departments_name = $thesis->sub_department->name ?? 'No Subdepartment';
         // $this->sub_departments_name = $thesis->sub_department->name;
         $this->subdepartments = SubDepartment::where('departments_id', $this->departments_id)->get();
         $this->submission_date = $thesis->submission_date;
@@ -385,7 +385,7 @@ class ThesisList extends Component
         $this->departments_id = $thesis->department_id;
         $this->departments_name = $thesis->department->name;
         $this->sub_departments_id = $thesis->sub_department_id;
-        $this->sub_departments_name = $thesis->sub_department->name;
+        $this->sub_departments_name = $thesis->sub_department->name ?? 'No Subdepartment';
         // $this->sub_departments_name = $thesis->sub_department->name;
         $this->subdepartments = SubDepartment::where('departments_id', $this->departments_id)->get();
         $this->submission_date = $thesis->submission_date;
